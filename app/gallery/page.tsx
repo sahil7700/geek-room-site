@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Gallery — GeekRoom JEMTEC",
-  description: "Media gallery from GeekRoom events and activities.",
+  title: "Gallery — GEEKROOM JIMSEMTC",
+  description: "Media gallery from GEEKROOM events and activities.",
 };
 
 export default function GalleryPage() {

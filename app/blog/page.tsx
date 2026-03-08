@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Blog — GeekRoom JEMTEC",
-  description: "Articles and resources from GeekRoom JEMTEC.",
+  title: "Blog — GEEKROOM JIMSEMTC",
+  description: "Articles and resources from GEEKROOM JIMSEMTC.",
 };
 
 const mockPosts = [
@@ -17,7 +17,7 @@ export default function BlogPage() {
     <main className="mx-auto max-w-4xl px-4 py-10 sm:px-6 sm:py-16">
       <h1 className="text-3xl font-bold sm:text-4xl">Articles & Resources</h1>
       <p className="mt-3 text-base text-foreground/80 sm:mt-4 sm:text-lg">
-        Tutorials, insights, and resources from the GeekRoom community.
+        Tutorials, insights, and resources from the GEEKROOM community.
       </p>
       <ul className="mt-8 space-y-4 sm:mt-12 sm:space-y-6">
         {mockPosts.map((post) => (

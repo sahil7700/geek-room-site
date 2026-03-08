@@ -1,17 +1,19 @@
-/* Hero: Animated mesh gradient - deep purple → indigo → black */
-.hero__gradient {
+/* Hero: Animated gradient mesh background */
+
+.hero__gradient-mesh {
   background: linear-gradient(
     135deg,
     #0f0c29 0%,
-    #302b63 35%,
-    #24243e 65%,
+    #1a1a40 25%,
+    #302b63 50%,
+    #24243e 75%,
     #0f0c29 100%
   );
   background-size: 400% 400%;
-  animation: meshGradient 15s ease infinite;
+  animation: hero-gradient-shift 20s ease infinite;
 }
 
-@keyframes meshGradient {
+@keyframes hero-gradient-shift {
   0%,
   100% {
     background-position: 0% 50%;
@@ -21,15 +23,42 @@
   }
 }
 
-/* Optional: subtle radial overlay for depth */
-.hero__gradient::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(
-    ellipse 80% 50% at 50% 20%,
-    rgba(129, 140, 248, 0.15) 0%,
-    transparent 50%
-  );
-  pointer-events: none;
+/* Title - 72px+ bold, purple to blue gradient */
+.hero__title {
+  font-size: clamp(3.5rem, 10vw, 5rem);
+  line-height: 1.05;
+  font-weight: 700;
+  background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 40%, #60a5fa 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-fill-color: transparent;
+  filter: drop-shadow(0 2px 20px rgba(139, 92, 246, 0.25));
+}
+
+/* Tagline */
+.hero__tagline {
+  font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+  color: rgba(255, 255, 255, 0.95);
+  letter-spacing: 0.03em;
+}
+
+/* Description */
+.hero__description {
+  font-size: clamp(1rem, 2vw, 1.15rem);
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.65;
+}
+
+/* Primary button - gradient purple to blue, glow hover */
+.hero__btn-primary {
+  background: linear-gradient(135deg, #8b5cf6 0%, #60a5fa 100%);
+  color: white;
+  box-shadow: 0 4px 20px rgba(139, 92, 246, 0.35);
+  transition: box-shadow 0.3s ease, transform 0.2s ease;
+}
+
+.hero__btn-primary:hover {
+  box-shadow: 0 8px 32px rgba(139, 92, 246, 0.5), 0 0 40px rgba(96, 165, 250, 0.2);
 }

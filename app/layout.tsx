@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "GeekRoom JEMTEC — Tech Society",
-  description: "Official website of GeekRoom, the tech society at JEMTEC. Events, projects, and community.",
+  title: "GEEKROOM JIMSEMTC — Tech Society",
+  description: "Official website of GEEKROOM, the tech society at JIMSEMTC. Events, projects, and community.",
 };
 
 export const viewport: Viewport = {

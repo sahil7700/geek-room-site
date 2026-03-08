@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@tsparticles/engine": "^3.9.1",
+    "@tsparticles/interaction-external-bubble": "^3.9.1",
+    "@tsparticles/interaction-external-repulse": "^3.9.1",
     "@tsparticles/react": "^3.0.0",
     "@tsparticles/slim": "^3.9.1",
     "framer-motion": "^12.35.0",

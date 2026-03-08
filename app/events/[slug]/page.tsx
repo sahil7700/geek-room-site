@@ -25,9 +25,9 @@ const mockEvents: Record<string, { title: string; date: string; description: str
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const event = mockEvents[slug];
-  if (!event) return { title: "Event — GeekRoom JEMTEC" };
+  if (!event) return { title: "Event — GEEKROOM JIMSEMTC" };
   return {
-    title: `${event.title} — GeekRoom JEMTEC`,
+    title: `${event.title} — GEEKROOM JIMSEMTC`,
     description: event.description,
   };
 }

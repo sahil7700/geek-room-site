@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Events — GeekRoom JEMTEC",
-  description: "Upcoming and past events by GeekRoom JEMTEC.",
+  title: "Events — GEEKROOM JIMSEMTC",
+  description: "Upcoming and past events by GEEKROOM JIMSEMTC.",
 };
 
 const mockEvents = [
@@ -20,7 +20,7 @@ export default function EventsPage() {
     <main className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-16">
       <h1 className="text-3xl font-bold sm:text-4xl">Events</h1>
       <p className="mt-3 text-base text-foreground/80 sm:mt-4 sm:text-lg">
-        Workshops, hackathons, and tech talks by GeekRoom.
+        Workshops, hackathons, and tech talks by GEEKROOM.
       </p>
 
       <section className="mt-8 sm:mt-12">

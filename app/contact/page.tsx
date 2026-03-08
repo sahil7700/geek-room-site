@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Contact — GeekRoom JEMTEC",
-  description: "Get in touch with GeekRoom JEMTEC.",
+  title: "Contact — GEEKROOM JIMSEMTC",
+  description: "Get in touch with GEEKROOM JIMSEMTC.",
 };
 
 export default function ContactPage() {
@@ -16,10 +16,10 @@ export default function ContactPage() {
         <div>
           <h3 className="font-semibold">Email</h3>
           <a
-            href="mailto:geekroom@jemtec.in"
+            href="mailto:geekroom@jimsemtc.in"
             className="inline-block min-h-[44px] py-2 text-foreground/80 underline hover:text-foreground"
           >
-            geekroom@jemtec.in
+            geekroom@jimsemtc.in
           </a>
         </div>
         <div>

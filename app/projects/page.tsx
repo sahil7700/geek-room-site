@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Projects — GeekRoom JEMTEC",
-  description: "Projects and achievements by GeekRoom JEMTEC members.",
+  title: "Projects — GEEKROOM JIMSEMTC",
+  description: "Projects and achievements by GEEKROOM JIMSEMTC members.",
 };
 
 const mockProjects = [

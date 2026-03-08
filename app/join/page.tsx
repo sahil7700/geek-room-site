@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Join Us — GeekRoom JEMTEC",
-  description: "Join GeekRoom JEMTEC. Recruitment form and membership info.",
+  title: "Join Us — GEEKROOM JIMSEMTC",
+  description: "Join GEEKROOM JIMSEMTC. Recruitment form and membership info.",
 };
 
 export default function JoinPage() {
@@ -10,7 +10,7 @@ export default function JoinPage() {
     <main className="mx-auto max-w-2xl px-4 py-10 sm:px-6 sm:py-16">
       <h1 className="text-3xl font-bold sm:text-4xl">Join Us</h1>
       <p className="mt-3 text-base text-foreground/80 sm:mt-4 sm:text-lg">
-        Fill out the form below to apply for membership in GeekRoom.
+        Fill out the form below to apply for membership in GEEKROOM.
       </p>
       <form className="mt-8 space-y-5 sm:mt-12 sm:space-y-6">
         <div>

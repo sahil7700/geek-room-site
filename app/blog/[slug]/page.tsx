@@ -25,9 +25,9 @@ const mockPosts: Record<string, { title: string; date: string; content: string }
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const post = mockPosts[slug];
-  if (!post) return { title: "Blog — GeekRoom JEMTEC" };
+  if (!post) return { title: "Blog — GEEKROOM JIMSEMTC" };
   return {
-    title: `${post.title} — GeekRoom JEMTEC`,
+    title: `${post.title} — GEEKROOM JIMSEMTC`,
     description: post.content.slice(0, 120),
   };
 }

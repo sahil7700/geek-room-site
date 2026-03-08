@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Team — GeekRoom JEMTEC",
-  description: "Meet the core team and members of GeekRoom JEMTEC.",
+  title: "Team — GEEKROOM JIMSEMTC",
+  description: "Meet the core team and members of GEEKROOM JIMSEMTC.",
 };
 
 export default function TeamPage() {
@@ -10,7 +10,7 @@ export default function TeamPage() {
     <main className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-16">
       <h1 className="text-3xl font-bold sm:text-4xl">Core Team & Members</h1>
       <p className="mt-3 text-base text-foreground/80 sm:mt-4 sm:text-lg">
-        The people behind GeekRoom — dedicated to building and growing our
+        The people behind GEEKROOM — dedicated to building and growing our
         tech community.
       </p>
       <div className="mt-8 grid gap-5 sm:mt-12 sm:grid-cols-2 sm:gap-8 lg:grid-cols-3">
