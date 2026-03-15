@@ -196,6 +196,7 @@ export default function EventsClient({ events }: { events: EventDetails[] }) {
                 return (
                   <motion.div
                     key={event.slug}
+                    id={event.slug}
                     variants={cardVariants}
                     initial="hidden"
                     animate="visible"

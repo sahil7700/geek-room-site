@@ -12,5 +12,9 @@ export default async function TeamPage() {
     || user?.emailAddresses?.[0]?.emailAddress 
     || null;
 
-  return <TeamClient members={members} loggedInEmail={loggedInEmail} />;
+  return (
+    <section id="team">
+      <TeamClient members={members} loggedInEmail={loggedInEmail} />
+    </section>
+  );
 }
