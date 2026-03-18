@@ -2,19 +2,19 @@
 
 import { useState } from "react";
 import { EventItem, updateEvent } from "@/app/actions/eventActions";
-import { Trash2, Plus, Image as ImageIcon, Loader2 } from "lucide-react";
+import { Trash2, Plus, Image as ImageIcon, Loader2, ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+import ImageUpload from "@/components/ImageUpload";
 
 export default function GalleryManagerClient({ events }: { events: EventItem[] }) {
   const router = useRouter();
   const [loadingEvent, setLoadingEvent] = useState<string | null>(null);
-  const [newImageUrls, setNewImageUrls] = useState<Record<string, string>>({});
 
-  // Local state for fast optimisitic updates
+  // Local state for fast optimistic updates
   const [localEvents, setLocalEvents] = useState<EventItem[]>(events);
 
-  const handleAddImage = async (eventId: string, currentGallery: string[] = []) => {
-    const urlToAdd = newImageUrls[eventId]?.trim();
+  const handleAddImage = async (eventId: string, urlToAdd: string, currentGallery: string[] = []) => {
     if (!urlToAdd) return;
 
     setLoadingEvent(eventId);
@@ -22,7 +22,6 @@ export default function GalleryManagerClient({ events }: { events: EventItem[] }
 
     // Optimistic Update
     setLocalEvents(prev => prev.map(e => e.id === eventId ? { ...e, gallery: updatedGallery } : e));
-    setNewImageUrls(prev => ({ ...prev, [eventId]: "" }));
 
     const res = await updateEvent(eventId, { gallery: updatedGallery });
     if (!res.success) {
@@ -52,6 +51,13 @@ export default function GalleryManagerClient({ events }: { events: EventItem[] }
   return (
     <main className="min-h-screen bg-black text-white pt-32 pb-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
+        <Link 
+          href="/admin" 
+          className="inline-flex items-center gap-2 text-sm text-zinc-400 hover:text-white transition-colors mb-6"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Back to Dashboard
+        </Link>
         <div className="flex items-center justify-between mb-12">
           <div>
             <h1 className="text-3xl font-bold mb-2">Gallery Management</h1>
@@ -80,28 +86,16 @@ export default function GalleryManagerClient({ events }: { events: EventItem[] }
                     <p className="text-sm text-zinc-500 font-mono mt-1">{new Date(event.date).toLocaleDateString()}</p>
                   </div>
 
-                  <div className="flex gap-2 w-full md:w-auto">
-                    <input 
-                      type="url" 
-                      placeholder="Paste new image URL..."
-                      value={newImageUrls[event.id] || ""}
-                      onChange={(e) => setNewImageUrls(prev => ({ ...prev, [event.id]: e.target.value }))}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter") {
-                          e.preventDefault();
-                          handleAddImage(event.id, gallery);
+                  <div className="w-full md:w-80">
+                    <ImageUpload 
+                      value="" 
+                      onChange={(url) => {
+                        if (url) {
+                          handleAddImage(event.id, url, gallery);
                         }
-                      }}
-                      className="flex-1 md:w-64 bg-black border border-zinc-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#00F2FF] transition-colors"
+                      }} 
+                      folder={`events/gallery/${event.id}`}
                     />
-                    <button 
-                      onClick={() => handleAddImage(event.id, gallery)}
-                      disabled={!newImageUrls[event.id]?.trim() || isLoading}
-                      className="bg-[#00F2FF]/20 hover:bg-[#00F2FF]/30 text-[#00F2FF] border border-[#00F2FF]/50 px-3 py-2 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
-                    >
-                      <Plus className="w-4 h-4" />
-                      <span className="hidden sm:inline">Add</span>
-                    </button>
                   </div>
                 </div>
 

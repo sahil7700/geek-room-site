@@ -3,7 +3,9 @@
 import { useState } from "react";
 import { addEvent } from "@/app/actions/eventActions";
 import { useRouter } from "next/navigation";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2, ArrowLeft } from "lucide-react";
+import Link from "next/link";
+import ImageUpload from "@/components/ImageUpload";
 
 export default function CreateEventPage() {
   const router = useRouter();
@@ -13,7 +15,9 @@ export default function CreateEventPage() {
   const [status, setStatus] = useState<"upcoming" | "past">("upcoming");
   const [category, setCategory] = useState<string>("hackathon");
   const [registrationOpen, setRegistrationOpen] = useState(true);
-  const [galleryUrls, setGalleryUrls] = useState("");
+  const [mainImage, setMainImage] = useState("");
+  const [galleryUrls, setGalleryUrls] = useState<string[]>([]);
+
   const [winners, setWinners] = useState([{ rank: "1st", teamName: "", members: "", photo: "" }]);
 
   function handleWinnerChange(index: number, field: string, value: string) {
@@ -47,7 +51,7 @@ export default function CreateEventPage() {
       description: formData.get("description") as string,
       date: formData.get("date") as string,
       location: formData.get("location") as string,
-      image: formData.get("image") as string,
+      image: mainImage,
       status, // from state
       category,
       registrationLink: `/register/${id}`,
@@ -56,7 +60,7 @@ export default function CreateEventPage() {
     if (status === "upcoming") {
       newEvent.registrationOpen = category === "workshop" ? false : registrationOpen;
     } else {
-      newEvent.gallery = galleryUrls.split(",").map(url => url.trim()).filter(Boolean);
+      newEvent.gallery = galleryUrls.filter(Boolean);
       
       if (category !== "workshop") {
         newEvent.winners = winners
@@ -84,6 +88,14 @@ export default function CreateEventPage() {
   return (
     <main className="min-h-screen bg-black text-white pt-32 pb-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto">
+        <Link 
+          href="/admin" 
+          className="inline-flex items-center gap-2 text-sm text-zinc-400 hover:text-white transition-colors mb-6"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Back to Dashboard
+        </Link>
+        
         <h1 className="text-3xl font-bold mb-8">Create New Event</h1>
         
         {error && (
@@ -116,8 +128,14 @@ export default function CreateEventPage() {
           </div>
 
           <div>
-            <label htmlFor="image" className="block text-sm font-medium text-zinc-400 mb-2">Image URL</label>
-            <input type="url" id="image" name="image" required placeholder="https://images.unsplash.com/..." className="w-full bg-black border border-zinc-800 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-colors" />
+            <label className="block text-sm font-medium text-zinc-400 mb-2">Main Image</label>
+            <ImageUpload 
+              value={mainImage} 
+              onChange={setMainImage} 
+              folder="events/main"
+            />
+            {/* Hidden input to ensure HTML validation gets an image if needed, though we handle it in JS */}
+            <input type="hidden" name="image" value={mainImage} />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -172,15 +190,30 @@ export default function CreateEventPage() {
           {status === "past" && (
             <div className="space-y-6 bg-zinc-800/30 p-6 rounded-lg border border-zinc-700/50">
               <div>
-                <label htmlFor="gallery" className="block text-sm font-medium text-zinc-400 mb-2">Gallery Image URLs (comma separated)</label>
-                <textarea 
-                  id="gallery" 
-                  value={galleryUrls}
-                  onChange={(e) => setGalleryUrls(e.target.value)}
-                  rows={3} 
-                  placeholder="https://image1.jpg, https://image2.jpg"
-                  className="w-full bg-black border border-zinc-800 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-colors text-sm" 
-                />
+                <label className="block text-sm font-medium text-zinc-400 mb-2">Gallery Images</label>
+                <div className="space-y-4">
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    {galleryUrls.map((url, i) => (
+                      <div key={i} className="relative group rounded-lg overflow-hidden border border-zinc-700 aspect-video">
+                        <img src={url} alt={`Gallery ${i}`} className="w-full h-full object-cover" />
+                        <button
+                          type="button"
+                          onClick={() => setGalleryUrls(galleryUrls.filter((_, index) => index !== i))}
+                          className="absolute top-2 right-2 p-1.5 bg-black/60 hover:bg-red-500/80 text-white rounded-full backdrop-blur transition-colors opacity-0 group-hover:opacity-100"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                  <ImageUpload 
+                    value="" 
+                    onChange={(url) => {
+                      if (url) setGalleryUrls([...galleryUrls, url]);
+                    }} 
+                    folder="events/gallery"
+                  />
+                </div>
               </div>
 
               {category !== "workshop" && category !== "talk" && (
@@ -231,12 +264,13 @@ export default function CreateEventPage() {
                             onChange={(e) => handleWinnerChange(index, "members", e.target.value)}
                             className="w-full flex-1 bg-zinc-900 border border-zinc-800 rounded px-3 py-2 text-sm focus:outline-none focus:border-zinc-500"
                           />
-                          <input 
-                            type="url" 
-                            placeholder="Winner Photo URL" 
-                            value={winner.photo}
-                            onChange={(e) => handleWinnerChange(index, "photo", e.target.value)}
-                            className="w-full flex-1 bg-zinc-900 border border-zinc-800 rounded px-3 py-2 text-sm focus:outline-none focus:border-zinc-500"
+                        </div>
+                        <div className="mt-3">
+                          <label className="block text-xs text-zinc-500 mb-2">Winner Photo</label>
+                          <ImageUpload 
+                            value={winner.photo} 
+                            onChange={(url) => handleWinnerChange(index, "photo", url)} 
+                            folder="events/winners/new"
                           />
                         </div>
                       </div>
