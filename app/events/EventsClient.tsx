@@ -9,7 +9,8 @@ import {
   Users, Trophy, ChevronDown, MonitorPlay, Zap
 } from "lucide-react";
 import ScrambleText from "@/components/ScrambleText";
-
+import MinimalEventCard from "@/components/MinimalEventCard";
+import LunarRunwayBackground from "@/components/LunarRunwayBackground";
 // Utility formatting
 const formatEventDate = (dateStr: string) => {
   const date = new Date(dateStr);
@@ -49,15 +50,6 @@ function useCountdown(targetDate: string) {
   return timeLeft;
 }
 
-// Modern soft mesh background
-function MeshBackground() {
-  return (
-    <div className="absolute inset-x-0 top-0 h-[800px] pointer-events-none overflow-hidden z-0 -translate-y-1/4">
-      <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-[#00F2FF]/10 rounded-full blur-[100px] mix-blend-screen opacity-50" />
-      <div className="absolute top-1/3 right-1/4 w-[600px] h-[600px] bg-[#8C52FF]/10 rounded-full blur-[120px] mix-blend-screen opacity-50" />
-    </div>
-  );
-}
 
 export default function EventsClient({ events }: { events: EventDetails[] }) {
   const [activeTab, setActiveTab] = useState<"past" | "upcoming">("past");
@@ -90,7 +82,7 @@ export default function EventsClient({ events }: { events: EventDetails[] }) {
 
   return (
     <div className="relative mt-8 sm:mt-12 w-full font-['var(--font-inter)']">
-      <MeshBackground />
+      <LunarRunwayBackground />
 
       {/* ============== HERO / FEATURED SECTION ============== */}
       <div className="relative z-10 flex flex-col items-center mb-16">
@@ -299,7 +291,7 @@ export default function EventsClient({ events }: { events: EventDetails[] }) {
                 const isLarge = (idx % 5 === 0) && filteredEvents.length > 2;
                 
                 return (
-                  <GridCard 
+                  <MinimalEventCard 
                     key={event.slug} 
                     event={event} 
                     index={idx} 
@@ -307,6 +299,7 @@ export default function EventsClient({ events }: { events: EventDetails[] }) {
                   />
                 );
               })}
+
             </motion.div>
           )}
         </AnimatePresence>
@@ -318,85 +311,4 @@ export default function EventsClient({ events }: { events: EventDetails[] }) {
 
 // ============== SUBCOMPONENTS ==============
 
-function GridCard({ event, index, isLarge }: { event: EventDetails, index: number, isLarge: boolean }) {
-  const isUpcoming = event.type === "upcoming";
-  const { day, month, year } = formatEventDate(event.date);
-  
-  const participants = Math.floor(Math.random() * 200) + 50;
 
-  return (
-    <motion.div
-      layoutId={`card-${event.slug}`}
-      initial="hidden"
-      animate="visible"
-      custom={index}
-      variants={{
-        hidden: { opacity: 0, y: 20 },
-        visible: { opacity: 1, y: 0, transition: { duration: 0.4, delay: index * 0.05, ease: "easeOut" } }
-      }}
-      className={`relative flex flex-col overflow-hidden rounded-3xl bg-[#0a0a0a]/50 border border-white/10 backdrop-blur-md group/card cursor-pointer transition-all duration-300 hover:border-white/20 hover:bg-[#111]/80 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(0,0,0,0.4)] ${isLarge ? "md:col-span-2 md:row-span-1" : "col-span-1 row-span-1"}`}
-    >
-      <Link href={`/events/${event.slug}`} className="absolute inset-0 z-30" />
-
-      {/* Background Image/Gradient */}
-      <div className="absolute inset-0 z-0">
-        {event.image ? (
-          <>
-            <img src={event.image} alt={event.title} className="w-full h-full object-cover opacity-30 transition-transform duration-700 group-hover/card:scale-105 group-hover/card:opacity-40" />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-[#0A0A0A]/80 to-transparent" />
-          </>
-        ) : (
-          <div className="w-full h-full bg-gradient-to-br from-[#1A1A1A] to-[#0A0A0A] opacity-50" />
-        )}
-      </div>
-
-      <div className="p-6 md:p-8 flex flex-col flex-1 relative z-10 h-full">
-        {/* Top Badges */}
-        <div className="flex flex-wrap items-center gap-2 mb-auto">
-          <span className="px-3 py-1 rounded-full text-xs font-medium text-white bg-white/10 border border-white/10 backdrop-blur-md">
-            {event.category ? event.category.charAt(0).toUpperCase() + event.category.slice(1).replace('-', ' ') : 'Event'}
-          </span>
-          {isUpcoming && (
-            <span className="px-3 py-1 rounded-full text-xs font-medium text-black bg-[#00F2FF] shadow-[0_0_10px_rgba(0,242,255,0.3)]">
-              Upcoming
-            </span>
-          )}
-        </div>
-
-        {/* Content Area */}
-        <div className="mt-8 flex flex-col justify-end">
-          <div className="flex items-center gap-2 text-sm text-gray-400 mb-3 font-medium">
-            <Calendar className="w-4 h-4" />
-            <span>{month} {day}, {year}</span>
-            {event.location && (
-              <>
-                <span className="w-1 h-1 rounded-full bg-gray-600 mx-1" />
-                <MapPin className="w-4 h-4" />
-                <span className="truncate max-w-[120px]">{event.location}</span>
-              </>
-            )}
-          </div>
-          
-          <h3 className={`font-bold text-white mb-3 tracking-tight font-['var(--font-geist-sans)'] line-clamp-2 ${isLarge ? 'text-2xl md:text-3xl' : 'text-xl md:text-2xl'}`}>
-            {event.title}
-          </h3>
-          
-          <p className="text-sm text-gray-400 line-clamp-2 leading-relaxed h-[40px] group-hover/card:text-gray-300 transition-colors">
-            {event.description}
-          </p>
-
-          {/* Footer Reveal on Hover */}
-          <div className="overflow-hidden h-0 group-hover/card:h-[40px] group-hover/card:mt-4 transition-all duration-300 opacity-0 group-hover/card:opacity-100 flex items-center justify-between border-t border-white/10 pt-4">
-            <div className="flex items-center gap-2 text-xs text-gray-400 font-medium">
-              <Users className="w-4 h-4" />
-              <span>{participants} Attendees</span>
-            </div>
-            <div className="flex items-center gap-1.5 text-sm font-medium text-white">
-              View Event <ArrowRight className="w-4 h-4" />
-            </div>
-          </div>
-        </div>
-      </div>
-    </motion.div>
-  );
-}

@@ -8,6 +8,7 @@ import { Calendar, MapPin, Clock, Trophy, Users, ArrowRight, ChevronDown, Share2
 import GallerySlideshow from "./GallerySlideshow";
 import MediaArchive from "@/components/MediaArchive";
 import GallerySection from "@/components/GallerySection";
+import LunarRunwayBackground from "@/components/LunarRunwayBackground";
 
 // Winner Team Card
 const WinnerTeamCard = ({ team, index }: { team: Winner; index: number }) => {
@@ -187,6 +188,7 @@ export default function EventDetailClient({ event }: { event: EventDetails }) {
 
   return (
     <main className="relative min-h-screen">
+      <LunarRunwayBackground />
       {/* Back Navigation */}
       <div className="sticky top-0 z-50 bg-[#0a0a0a]/90 backdrop-blur-xl border-b border-white/10">
         <div className="mx-auto max-w-6xl px-4 py-4">

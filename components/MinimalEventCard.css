@@ -1,0 +1,273 @@
+.event-card-minimal {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  perspective: 1000px;
+  cursor: pointer;
+  transition: transform 0.1s ease-out;
+}
+
+.card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border-radius: 1.5rem; /* 24px matches 3xl */
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+}
+
+/* Hover tilt */
+.event-card-minimal:hover .card-inner {
+  transform: 
+    rotateX(var(--rotate-x, 0deg)) 
+    rotateY(var(--rotate-y, 0deg))
+    translateZ(20px);
+}
+
+/* Effect layer */
+.hover-effect-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 5;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.event-card-minimal:hover .hover-effect-layer {
+  opacity: 1;
+}
+
+/* ----------------------------------------------------- */
+/* EVENT 1: HACKQUANTA */
+/* ----------------------------------------------------- */
+.event-card-minimal[data-event="hackquanta"] {
+  --accent-color: #8B5CF6;
+}
+
+.event-card-minimal[data-event="hackquanta"] .hover-effect-layer {
+  background: radial-gradient(
+    600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(139, 92, 246, 0.15),
+    transparent 40%
+  );
+  mix-blend-mode: screen;
+}
+
+/* Subtle border glow on hover */
+.event-card-minimal[data-event="hackquanta"]:hover .card-inner {
+  border-color: rgba(139, 92, 246, 0.3);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    0 0 0 1px rgba(139, 92, 246, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* ----------------------------------------------------- */
+/* EVENT 2: GEEK VEEK 2.0 */
+/* ----------------------------------------------------- */
+.event-card-minimal[data-event="geek-veek-2"] {
+  --accent-color: #3B82F6;
+}
+
+.event-card-minimal[data-event="geek-veek-2"] .hover-effect-layer::before {
+  content: '';
+  position: absolute;
+  top: var(--mouse-y, 50%);
+  left: var(--mouse-x, 50%);
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(59, 130, 246, 0.4);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  opacity: 0;
+}
+
+.event-card-minimal[data-event="geek-veek-2"] .hover-effect-layer.ripple-active::before {
+  animation: rippleExpand 1.5s ease-out forwards;
+}
+
+@keyframes rippleExpand {
+  0% {
+    width: 20px;
+    height: 20px;
+    opacity: 1;
+  }
+  100% {
+    width: 800px;
+    height: 800px;
+    opacity: 0;
+  }
+}
+
+/* ----------------------------------------------------- */
+/* EVENT 3: BLOCKGEN */
+/* ----------------------------------------------------- */
+.event-card-minimal[data-event="blockgen"] {
+  --accent-color: #FFD700;
+}
+
+.event-card-minimal[data-event="blockgen"] .hover-effect-layer {
+  background-image: 
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 29px,
+      rgba(255, 215, 0, 0.03) 29px,
+      rgba(255, 215, 0, 0.03) 30px
+    ),
+    repeating-linear-gradient(
+      60deg,
+      transparent,
+      transparent 29px,
+      rgba(255, 215, 0, 0.03) 29px,
+      rgba(255, 215, 0, 0.03) 30px
+    ),
+    repeating-linear-gradient(
+      120deg,
+      transparent,
+      transparent 29px,
+      rgba(255, 215, 0, 0.03) 29px,
+      rgba(255, 215, 0, 0.03) 30px
+    );
+  background-size: 60px 104px;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+.event-card-minimal[data-event="blockgen"]:hover .hover-effect-layer {
+  opacity: 1;
+}
+
+/* Subtle golden border */
+.event-card-minimal[data-event="blockgen"]:hover .card-inner {
+  border-color: rgba(255, 215, 0, 0.2);
+}
+
+/* ----------------------------------------------------- */
+/* EVENT 4: APTIVERSE */
+/* ----------------------------------------------------- */
+.event-card-minimal[data-event="aptiverse"] {
+  --accent-color: #10B981;
+}
+
+.event-card-minimal[data-event="aptiverse"] .hover-effect-layer::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(16, 185, 129, 0.6) 50%,
+    transparent
+  );
+  transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.event-card-minimal[data-event="aptiverse"]:hover .hover-effect-layer::after {
+  width: 100%;
+}
+
+/* ----------------------------------------------------- */
+/* EVENT 5: HACKFORCE */
+/* ----------------------------------------------------- */
+.event-card-minimal[data-event="hackforce"] {
+  --accent-color: #00FF00;
+}
+
+.event-card-minimal[data-event="hackforce"] .hover-effect-layer::before {
+  content: '';
+  position: absolute;
+  top: -100%;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(
+    180deg,
+    transparent,
+    rgba(0, 255, 0, 0.6),
+    transparent
+  );
+  box-shadow: 0 0 20px rgba(0, 255, 0, 0.4);
+}
+
+.event-card-minimal[data-event="hackforce"] .hover-effect-layer.scanline-active::before {
+  animation: scanlinePass 2s ease-in-out;
+}
+
+@keyframes scanlinePass {
+  0% {
+    top: -10%;
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    top: 110%;
+    opacity: 0;
+  }
+}
+
+/* ----------------------------------------------------- */
+/* EVENT 6: GEEK VEEK (ORIGINAL) */
+/* ----------------------------------------------------- */
+.event-card-minimal[data-event="geek-veek-1"] {
+  --accent-color: #FF6B35;
+}
+
+.event-card-minimal[data-event="geek-veek-1"] .hover-effect-layer {
+  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8"><rect width="1" height="1" fill="rgba(255,107,53,0.1)"/></svg>');
+  background-size: 8px 8px;
+  animation: pixelShift 0.5s steps(4) infinite;
+}
+
+@keyframes pixelShift {
+  0% { background-position: 0 0; }
+  25% { background-position: 2px 0; }
+  50% { background-position: 2px 2px; }
+  75% { background-position: 0 2px; }
+  100% { background-position: 0 0; }
+}
+
+.event-card-minimal[data-event="geek-veek-1"]:hover .card-inner {
+  border-color: rgba(255, 107, 53, 0.3);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    0 0 0 1px rgba(255, 107, 53, 0.2),
+    inset 2px 2px 0 rgba(255, 107, 53, 0.1);
+}
+
+/* Disable 3D tilt on mobile (performance) */
+@media (max-width: 768px) {
+  .event-card-minimal:hover .card-inner {
+    transform: translateZ(10px) rotateX(0) rotateY(0) !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .event-card-minimal *,
+  .event-card-minimal::before,
+  .event-card-minimal::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
