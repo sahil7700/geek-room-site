@@ -35,7 +35,7 @@ export default async function EventDetailPage({ params }: Props) {
     registrationLink: rawEvent.registrationLink,
     location: rawEvent.location,
     time: rawEvent.time,
-    category: rawEvent.category as any || "tech-fest",
+    category: rawEvent.category as any || "tech-event",
     registrationOpen: rawEvent.registrationOpen,
     gallery: rawEvent.gallery,
     winners: rawEvent.winners

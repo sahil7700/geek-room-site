@@ -33,7 +33,7 @@ function formatDate(dateStr: string) {
 
 const CATEGORY_LABELS: Record<string, string> = {
   hackathon: "Hackathon",
-  "tech-fest": "Tech Festival",
+  "tech-event": "Tech Event",
   workshop: "Workshop",
   competition: "Competition",
 };

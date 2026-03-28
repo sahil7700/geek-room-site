@@ -58,7 +58,7 @@ export default function EventsClient({ events }: { events: EventDetails[] }) {
   const [sortBy, setSortBy] = useState<"latest" | "popular" | "ending-soon">("latest");
   const [dropdownOpen, setDropdownOpen] = useState(false);
   
-  const categories = ["all", "hackathon", "workshop", "talk", "tech-fest"];
+  const categories = ["all", "hackathon", "workshop", "talk", "tech-event"];
 
   // Filter & Sort Logic
   const filteredEvents = useMemo(() => {

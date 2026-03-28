@@ -134,7 +134,7 @@ export default function GalleryManagerClient({ events }: { events: EventItem[] }
              <div className="text-center py-24 text-zinc-500">
                <ImageIcon className="w-16 h-16 mx-auto mb-4 opacity-20" />
                <h2 className="text-xl font-bold mb-2">No Past Events</h2>
-               <p>Create a past event with the Tech Fest or Hackathon category to start adding gallery images.</p>
+              <p>Create a past event with the Tech Event or Hackathon category to start adding gallery images.</p>
              </div>
           )}
         </div>

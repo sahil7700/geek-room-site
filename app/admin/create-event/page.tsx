@@ -164,7 +164,7 @@ export default function CreateEventPage() {
               >
                 <option value="hackathon">Hackathon</option>
                 <option value="workshop">Workshop</option>
-                <option value="tech-fest">Tech Fest</option>
+                <option value="tech-event">Tech Event</option>
                 <option value="talk">Talk</option>
                 <option value="other">Other</option>
               </select>

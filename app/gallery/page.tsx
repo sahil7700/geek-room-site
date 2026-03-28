@@ -27,7 +27,7 @@ export default async function GalleryPage() {
       registrationLink: e.registrationLink,
       location: e.location,
       time: e.time,
-      category: e.category || "tech-fest",
+      category: e.category || "tech-event",
       registrationOpen: e.registrationOpen,
       gallery: e.gallery,
       winners: e.winners
