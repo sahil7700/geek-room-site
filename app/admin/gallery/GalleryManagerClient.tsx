@@ -1,18 +1,25 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { EventItem, updateEvent } from "@/app/actions/eventActions";
-import { Trash2, Plus, Image as ImageIcon, Loader2, ArrowLeft } from "lucide-react";
+import { Trash2, Image as ImageIcon, Loader2, ArrowLeft, AlertTriangle, Check } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import ImageUpload from "@/components/ImageUpload";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function GalleryManagerClient({ events }: { events: EventItem[] }) {
   const router = useRouter();
   const [loadingEvent, setLoadingEvent] = useState<string | null>(null);
-
-  // Local state for fast optimistic updates
   const [localEvents, setLocalEvents] = useState<EventItem[]>(events);
+  const [toast, setToast] = useState<string | null>(null);
+  const [confirmDelete, setConfirmDelete] = useState<{ eventId: string; url: string; gallery: string[] } | null>(null);
+
+  const showToast = useCallback((message: string) => {
+    setToast(message);
+    setTimeout(() => setToast(null), 2500);
+  }, []);
 
   const handleAddImage = async (eventId: string, urlToAdd: string, currentGallery: string[] = []) => {
     if (!urlToAdd) return;
@@ -20,40 +27,102 @@ export default function GalleryManagerClient({ events }: { events: EventItem[] }
     setLoadingEvent(eventId);
     const updatedGallery = [...currentGallery, urlToAdd];
 
-    // Optimistic Update
     setLocalEvents(prev => prev.map(e => e.id === eventId ? { ...e, gallery: updatedGallery } : e));
 
     const res = await updateEvent(eventId, { gallery: updatedGallery });
     if (!res.success) {
-      alert("Failed to add image. Reverting.");
-      router.refresh(); // revert
+      showToast("Failed to add image.");
+      router.refresh();
+    } else {
+      showToast("Image added.");
     }
     setLoadingEvent(null);
   };
 
-  const handleRemoveImage = async (eventId: string, imageUrl: string, currentGallery: string[] = []) => {
-    if (!confirm("Are you sure you want to remove this image?")) return;
-    
-    setLoadingEvent(eventId);
-    const updatedGallery = currentGallery.filter(url => url !== imageUrl);
+  const confirmAndDelete = async () => {
+    if (!confirmDelete) return;
+    const { eventId, url, gallery } = confirmDelete;
+    setConfirmDelete(null);
 
-    // Optimistic Update
+    setLoadingEvent(eventId);
+    const updatedGallery = gallery.filter(u => u !== url);
+
     setLocalEvents(prev => prev.map(e => e.id === eventId ? { ...e, gallery: updatedGallery } : e));
 
     const res = await updateEvent(eventId, { gallery: updatedGallery });
     if (!res.success) {
-      alert("Failed to remove image. Reverting.");
-      router.refresh(); // revert
+      showToast("Failed to remove image.");
+      router.refresh();
+    } else {
+      showToast("Image removed.");
     }
     setLoadingEvent(null);
   };
 
   return (
-    <main className="min-h-screen bg-black text-white pt-32 pb-12 px-4 sm:px-6 lg:px-8">
+    <main className="min-h-screen bg-black text-white pt-32 pb-12 px-4 sm:px-6 lg:px-8 relative">
+      {/* Toast Notification */}
+      <AnimatePresence>
+        {toast && (
+          <motion.div
+            initial={{ opacity: 0, y: 50, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.9 }}
+            className="fixed bottom-8 left-1/2 -translate-x-1/2 z-[200] bg-[#00F2FF] text-black font-mono text-sm px-6 py-3 rounded-full shadow-[0_0_30px_rgba(0,242,255,0.4)] flex items-center gap-2"
+          >
+            <Check className="w-4 h-4" />
+            {toast}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Confirm Delete Modal */}
+      <AnimatePresence>
+        {confirmDelete && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[200] flex items-center justify-center p-4"
+            onClick={() => setConfirmDelete(null)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
+              className="bg-zinc-900 border border-zinc-700 rounded-2xl p-6 max-w-sm w-full shadow-2xl"
+            >
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-full bg-red-500/20 flex items-center justify-center">
+                  <AlertTriangle className="w-5 h-5 text-red-500" />
+                </div>
+                <h3 className="text-lg font-bold">Remove Image</h3>
+              </div>
+              <p className="text-zinc-400 text-sm mb-6">Are you sure you want to remove this image? This action cannot be undone.</p>
+              <div className="flex gap-3 justify-end">
+                <button
+                  onClick={() => setConfirmDelete(null)}
+                  className="px-4 py-2 rounded-lg bg-zinc-800 text-zinc-300 hover:bg-zinc-700 transition-colors text-sm font-medium cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={confirmAndDelete}
+                  className="px-4 py-2 rounded-lg bg-red-500 text-white hover:bg-red-600 transition-colors text-sm font-medium cursor-pointer"
+                >
+                  Remove
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <div className="max-w-7xl mx-auto">
         <Link 
           href="/admin" 
-          className="inline-flex items-center gap-2 text-sm text-zinc-400 hover:text-white transition-colors mb-6"
+          className="inline-flex items-center gap-2 text-sm text-zinc-400 hover:text-white transition-colors mb-6 cursor-pointer"
         >
           <ArrowLeft className="w-4 h-4" />
           Back to Dashboard
@@ -107,16 +176,19 @@ export default function GalleryManagerClient({ events }: { events: EventItem[] }
                     </div>
                   ) : (
                     gallery.map((url, index) => (
-                      <div key={`${event.id}-${index}`} className="group relative aspect-square rounded-lg overflow-hidden border border-zinc-800 bg-black">
-                        <img 
+                      <div key={url} className="group relative aspect-square rounded-lg overflow-hidden border border-zinc-800 bg-black">
+                        <Image 
                           src={url} 
-                          alt={`${event.title} ${index + 1}`} 
-                          className="w-full h-full object-cover group-hover:opacity-50 transition-opacity"
+                          alt={`${event.title} gallery photo ${index + 1}`} 
+                          fill
+                          sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 16vw"
+                          className="object-cover group-hover:opacity-50 transition-opacity"
                         />
                         <button 
-                          onClick={() => handleRemoveImage(event.id, url, gallery)}
-                          className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                          onClick={() => setConfirmDelete({ eventId: event.id, url, gallery })}
+                          className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
                           title="Remove Image"
+                          aria-label={`Remove image ${index + 1} from ${event.title}`}
                         >
                           <div className="bg-red-500/20 text-red-500 border border-red-500 hover:bg-red-500 hover:text-white p-3 rounded-full transition-colors backdrop-blur-md">
                             <Trash2 className="w-6 h-6" />

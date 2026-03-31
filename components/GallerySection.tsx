@@ -1,34 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Image, Maximize, X, ChevronLeft, ChevronRight } from "lucide-react";
+import NextImage from "next/image";
+import { Image as ImageIcon, Maximize, X, ChevronLeft, ChevronRight } from "lucide-react";
 
-interface GallerySectionProps {
-  images: string[];
-  title?: string;
-}
-
-export default function GallerySection({ images, title = "Event Gallery" }: GallerySectionProps) {
-  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
-  const [loadedImages, setLoadedImages] = useState<Set<number>>(new Set());
-
-  const handleImageLoad = (index: number) => {
-    setLoadedImages((prev) => new Set([...prev, index]));
-  };
-
-  const nextImage = () => {
-    if (selectedIndex === null) return;
-    setSelectedIndex((prev) => (prev! + 1) % images.length);
-  };
-
-  const prevImage = () => {
-    if (selectedIndex === null) return;
-    setSelectedIndex((prev) => (prev! - 1 + images.length) % images.length);
-  };
-
-  // Tech decoration pattern
-  const TechPattern = () => (
+function TechPattern() {
+  return (
     <svg className="absolute inset-0 w-full h-full opacity-10 pointer-events-none" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <pattern id="techPattern" width="20" height="20" patternUnits="userSpaceOnUse">
@@ -38,6 +16,63 @@ export default function GallerySection({ images, title = "Event Gallery" }: Gall
       <rect width="100%" height="100%" fill="url(#techPattern)" />
     </svg>
   );
+}
+
+interface GallerySectionProps {
+  images: string[];
+  title?: string;
+  imageLabels?: string[];
+}
+
+export default function GallerySection({ images, title = "Event Gallery", imageLabels }: GallerySectionProps) {
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const [loadedImages, setLoadedImages] = useState<Set<number>>(new Set());
+  const [tilt, setTilt] = useState<Record<number, { x: number; y: number }>>({});
+
+  const handleImageLoad = (index: number) => {
+    setLoadedImages((prev) => new Set([...prev, index]));
+  };
+
+  const nextImage = useCallback(() => {
+    setSelectedIndex((prev) => {
+      if (prev === null) return null;
+      return (prev + 1) % images.length;
+    });
+  }, [images.length]);
+
+  const prevImage = useCallback(() => {
+    setSelectedIndex((prev) => {
+      if (prev === null) return null;
+      return (prev - 1 + images.length) % images.length;
+    });
+  }, [images.length]);
+
+  useEffect(() => {
+    if (selectedIndex === null) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setSelectedIndex(null);
+      if (e.key === "ArrowRight") nextImage();
+      if (e.key === "ArrowLeft") prevImage();
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [selectedIndex, nextImage, prevImage]);
+
+  const handleMouseMove = (e: React.MouseEvent, index: number) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    setTilt((prev) => ({ ...prev, [index]: { x: y * -8, y: x * 8 } }));
+  };
+
+  const handleMouseLeave = (index: number) => {
+    setTilt((prev) => ({ ...prev, [index]: { x: 0, y: 0 } }));
+  };
+
+  const getAltText = (index: number) => {
+    if (imageLabels && imageLabels[index]) return imageLabels[index];
+    return `Gallery photo ${index + 1} of ${images.length}`;
+  };
 
   return (
     <section className="relative overflow-hidden">
@@ -53,7 +88,7 @@ export default function GallerySection({ images, title = "Event Gallery" }: Gall
               animate={{ rotate: 360 }}
               transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
             >
-              <Image className="h-6 w-6 text-[#00F2FF]" />
+              <ImageIcon className="h-6 w-6 text-[#00F2FF]" />
             </motion.div>
             <div className="absolute inset-0 blur-md bg-[#00F2FF]/30" />
           </div>
@@ -89,9 +124,10 @@ export default function GallerySection({ images, title = "Event Gallery" }: Gall
       </div>
 
       {/* Gallery Grid */}
-      <div className="relative z-10 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4 px-4">
+      <div className="relative z-10 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4 px-4" style={{ perspective: "1200px" }}>
         {images.map((img, index) => {
           const isLoaded = loadedImages.has(index);
+          const cardTilt = tilt[index] || { x: 0, y: 0 };
 
           return (
             <motion.div
@@ -101,17 +137,31 @@ export default function GallerySection({ images, title = "Event Gallery" }: Gall
               transition={{ delay: index * 0.05 }}
               className="relative group cursor-pointer"
               onClick={() => setSelectedIndex(index)}
+              onMouseMove={(e) => handleMouseMove(e, index)}
+              onMouseLeave={() => handleMouseLeave(index)}
             >
               {/* Image Container with 3D Tilt Effect */}
               <motion.div
                 className="relative aspect-square overflow-hidden rounded-lg border border-[#00F2FF]/20 bg-[#0a0a0a]"
-                whileHover={{
-                  scale: 1.05,
-                  rotate: [-1, 1, -1],
-                  transition: { duration: 0.3 }
-                }}
                 style={{
-                  perspective: "1000px"
+                  transform: `perspective(1000px) rotateX(${cardTilt.x}deg) rotateY(${cardTilt.y}deg)`,
+                  transformStyle: "preserve-3d",
+                  transition: "transform 0.15s ease-out",
+                  boxShadow: `
+                    0 2px 4px rgba(0, 0, 0, 0.3),
+                    0 8px 16px rgba(0, 0, 0, 0.25),
+                    0 24px 48px rgba(0, 0, 0, 0.2),
+                    0 0 0 1px rgba(0, 242, 255, 0.05)
+                  `,
+                }}
+                whileHover={{
+                  boxShadow: `
+                    0 4px 8px rgba(0, 0, 0, 0.3),
+                    0 16px 32px rgba(0, 0, 0, 0.25),
+                    0 32px 64px rgba(0, 0, 0, 0.2),
+                    0 0 0 1px rgba(0, 242, 255, 0.15),
+                    0 0 30px rgba(0, 242, 255, 0.1)
+                  `,
                 }}
               >
                 {/* Loading State */}
@@ -126,10 +176,12 @@ export default function GallerySection({ images, title = "Event Gallery" }: Gall
                 )}
 
                 {/* Image */}
-                <img
+                <NextImage
                   src={img}
-                  alt={`Gallery ${index + 1}`}
-                  className={`w-full h-full object-cover transition-all duration-500 ${
+                  alt={getAltText(index)}
+                  fill
+                  sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                  className={`object-cover transition-all duration-500 ${
                     isLoaded ? "opacity-100" : "opacity-0"
                   }`}
                   onLoad={() => handleImageLoad(index)}
@@ -167,6 +219,16 @@ export default function GallerySection({ images, title = "Event Gallery" }: Gall
                 <div className="absolute bottom-0 right-0 w-6 h-6 border-b border-r border-[#00F2FF]/40 group-hover:border-[#00F2FF] transition-colors rounded-br" />
               </motion.div>
 
+              {/* Glow Floor */}
+              <div
+                className="absolute -bottom-1 left-4 right-4 h-3 rounded-full opacity-0 group-hover:opacity-60 transition-opacity duration-300 pointer-events-none"
+                style={{
+                  background: "radial-gradient(ellipse, rgba(0, 242, 255, 0.4), transparent)",
+                  filter: "blur(6px)",
+                  transform: "scaleX(0.7)",
+                }}
+              />
+
               {/* Index Badge */}
               <div className="absolute top-2 right-2 bg-black/60 backdrop-blur-sm border border-[#00F2FF]/30 rounded px-2 py-1 text-[10px] font-mono text-[#00F2FF]">
                 #{(index + 1).toString().padStart(2, "0")}
@@ -194,7 +256,8 @@ export default function GallerySection({ images, title = "Event Gallery" }: Gall
                 animate={{ scale: 1, rotate: 0 }}
                 exit={{ scale: 0, rotate: 90 }}
                 onClick={() => setSelectedIndex(null)}
-                className="absolute top-4 right-4 md:top-8 md:right-8 bg-[#FF8C00]/20 hover:bg-[#FF8C00]/30 border border-[#FF8C00] text-[#FF8C00] rounded-full p-3 transition-colors z-50"
+                aria-label="Close lightbox"
+                className="absolute top-4 right-4 md:top-8 md:right-8 bg-[#FF8C00]/20 hover:bg-[#FF8C00]/30 border border-[#FF8C00] text-[#FF8C00] rounded-full p-3 transition-colors z-50 cursor-pointer"
               >
                 <X className="h-6 w-6" />
               </motion.button>
@@ -205,7 +268,8 @@ export default function GallerySection({ images, title = "Event Gallery" }: Gall
                 animate={{ x: 0, opacity: 1 }}
                 exit={{ x: -20, opacity: 0 }}
                 onClick={(e) => { e.stopPropagation(); prevImage(); }}
-                className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 bg-[#00F2FF]/20 hover:bg-[#00F2FF]/30 border border-[#00F2FF] text-[#00F2FF] rounded-full p-3 transition-colors"
+                aria-label="Previous image"
+                className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 bg-[#00F2FF]/20 hover:bg-[#00F2FF]/30 border border-[#00F2FF] text-[#00F2FF] rounded-full p-3 transition-colors cursor-pointer"
               >
                 <ChevronLeft className="h-6 w-6" />
               </motion.button>
@@ -215,23 +279,34 @@ export default function GallerySection({ images, title = "Event Gallery" }: Gall
                 animate={{ x: 0, opacity: 1 }}
                 exit={{ x: 20, opacity: 0 }}
                 onClick={(e) => { e.stopPropagation(); nextImage(); }}
-                className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 bg-[#00F2FF]/20 hover:bg-[#00F2FF]/30 border border-[#00F2FF] text-[#00F2FF] rounded-full p-3 transition-colors"
+                aria-label="Next image"
+                className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 bg-[#00F2FF]/20 hover:bg-[#00F2FF]/30 border border-[#00F2FF] text-[#00F2FF] rounded-full p-3 transition-colors cursor-pointer"
               >
                 <ChevronRight className="h-6 w-6" />
               </motion.button>
 
-              {/* Image */}
-              <motion.img
+              {/* Image with 3D entrance */}
+              <motion.div
                 key={selectedIndex}
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.8, opacity: 0 }}
-                transition={{ type: "spring", damping: 30 }}
-                src={images[selectedIndex]}
-                alt={`Gallery ${selectedIndex + 1}`}
-                className="max-w-full max-h-[80vh] object-contain rounded-lg border-2 border-[#00F2FF]/30 shadow-[0_0_50px_rgba(0,242,255,0.3)]"
+                initial={{ scale: 0.7, opacity: 0, rotateY: 15 }}
+                animate={{ scale: 1, opacity: 1, rotateY: 0 }}
+                exit={{ scale: 0.8, opacity: 0, rotateY: -10 }}
+                transition={{ type: "spring", damping: 25, stiffness: 200 }}
+                style={{ transformPerspective: 1000 }}
+                className="relative max-w-full max-h-[80vh] aspect-auto"
                 onClick={(e) => e.stopPropagation()}
-              />
+              >
+                <NextImage
+                  src={images[selectedIndex]}
+                  alt={getAltText(selectedIndex)}
+                  fill
+                  sizes="100vw"
+                  className="object-contain rounded-lg"
+                  priority
+                />
+                {/* Glow border around lightbox image */}
+                <div className="absolute inset-0 rounded-lg border-2 border-[#00F2FF]/30 shadow-[0_0_50px_rgba(0,242,255,0.3)] pointer-events-none" />
+              </motion.div>
 
               {/* Image Counter */}
               <div className="absolute bottom-8 left-1/2 -translate-x-1/2 bg-black/60 backdrop-blur-sm border border-white/10 rounded-full px-6 py-2 text-sm font-mono text-white">

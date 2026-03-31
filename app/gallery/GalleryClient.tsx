@@ -1,56 +1,18 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Image as ImageIcon, Film, X, ChevronLeft, ChevronRight, Search, Download, Calendar, MapPin, FolderOpen, Share2, Layers } from "lucide-react";
+import { Image as ImageIcon, Film, X, ChevronLeft, ChevronRight, Search, Download, Calendar, MapPin, FolderOpen, Share2, Layers, Check } from "lucide-react";
 import Image from "next/image";
 import { EventDetails } from "../events/data";
+import ParticleBackground from "./ParticleBackground";
+import CustomCursor from "./CustomCursor";
+import FlipCounter from "./FlipCounter";
 
 type MediaType = "all" | "photos" | "videos";
 
 interface GalleryClientProps {
   events: EventDetails[];
-}
-
-function StatCard({ value, label, isActive }: { value: number, label: string, isActive: boolean }) {
-  const [count, setCount] = useState(0);
-
-  useEffect(() => {
-    let start = 0;
-    const end = value;
-    if (start === end) {
-      setCount(value);
-      return;
-    }
-    const duration = 1500;
-    const incrementTime = Math.max(duration / end, 10);
-    const timer = setTimeout(() => {
-      const counter = setInterval(() => {
-        start += 1;
-        setCount(start);
-        if (start >= end) clearInterval(counter);
-      }, incrementTime);
-      return () => clearInterval(counter);
-    }, 100);
-    return () => clearTimeout(timer);
-  }, [value]);
-
-  const getColor = () => {
-    if (label === 'Photos') return 'text-[#00F2FF] drop-shadow-[0_0_8px_rgba(0,242,255,0.5)]';
-    if (label === 'Videos') return 'text-[#FF8C00] drop-shadow-[0_0_8px_rgba(255,140,0,0.5)]';
-    return 'text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]';
-  };
-
-  return (
-    <div className={`flex flex-col items-center justify-center p-3 md:p-4 rounded-2xl border transition-all duration-300 w-full md:w-28 ${isActive ? 'bg-white/10 border-[#00F2FF]/50 shadow-[0_0_20px_rgba(0,242,255,0.2)]' : 'bg-white/5 border-white/5 hover:border-white/20 hover:bg-white/10'}`}>
-      <span className={`text-3xl md:text-4xl font-black mb-1 ${getColor()}`} style={{ fontFamily: "'Bebas Neue', sans-serif" }}>
-        {count.toString().padStart(2, '0')}
-      </span>
-      <span className="text-[10px] md:text-xs uppercase tracking-widest font-mono text-gray-400">
-        {label}
-      </span>
-    </div>
-  );
 }
 
 export default function GalleryClient({ events }: GalleryClientProps) {
@@ -59,6 +21,14 @@ export default function GalleryClient({ events }: GalleryClientProps) {
   const [direction, setDirection] = useState(0);
   const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set());
   const [activeFolder, setActiveFolder] = useState<string | null>(null);
+  const [tilt, setTilt] = useState<Record<string, { x: number; y: number; mx: number; my: number }>>({});
+  const [toast, setToast] = useState<string | null>(null);
+  const [hoveredFolder, setHoveredFolder] = useState<string | null>(null);
+
+  const showToast = (message: string) => {
+    setToast(message);
+    setTimeout(() => setToast(null), 2500);
+  };
 
   // Collect all media from all passed events
   const mediaItems = events.flatMap(event => {
@@ -84,19 +54,21 @@ export default function GalleryClient({ events }: GalleryClientProps) {
     ? mediaItems
     : mediaItems.filter(item => item.type === (filter === "photos" ? "photo" : "video"));
 
-  const groupedByEvent: Record<string, typeof mediaItems> = {};
-  filteredMedia.forEach(item => {
-    if (!groupedByEvent[item.event]) {
-      groupedByEvent[item.event] = [];
-    }
-    groupedByEvent[item.event].push(item);
-  });
+  const groupedByEvent = useMemo(() => {
+    const grouped: Record<string, typeof mediaItems> = {};
+    filteredMedia.forEach(item => {
+      if (!grouped[item.event]) {
+        grouped[item.event] = [];
+      }
+      grouped[item.event].push(item);
+    });
+    return grouped;
+  }, [filteredMedia]);
 
-  useEffect(() => {
-    if (activeFolder && !groupedByEvent[activeFolder]) {
-      setActiveFolder(null); // Reset if current folder is filtered out
-    }
-  }, [filter, activeFolder, groupedByEvent]);
+  const activeFolderItems = activeFolder ? groupedByEvent[activeFolder] || [] : [];
+
+  // If active folder was filtered out, treat as no folder selected
+  const effectiveFolder = activeFolder && groupedByEvent[activeFolder] ? activeFolder : null;
 
   const handleImageLoad = (src: string) => {
     setLoadedImages((prev) => new Set([...prev, src]));
@@ -106,9 +78,6 @@ export default function GalleryClient({ events }: GalleryClientProps) {
     setSelectedIndex(index);
   };
 
-  // For lightbox navigation we want only the currently active folder's items
-  const activeFolderItems = activeFolder ? groupedByEvent[activeFolder] || [] : [];
-  
   const nextImage = () => {
     setDirection(1);
     setSelectedIndex((prev) => {
@@ -131,8 +100,14 @@ export default function GalleryClient({ events }: GalleryClientProps) {
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (selectedIndex !== null) {
-        if (e.key === "ArrowRight") nextImage();
-        if (e.key === "ArrowLeft") prevImage();
+        if (e.key === "ArrowRight") {
+          setDirection(1);
+          setSelectedIndex((prev) => prev === null ? null : (prev + 1) % activeFolderItems.length);
+        }
+        if (e.key === "ArrowLeft") {
+          setDirection(-1);
+          setSelectedIndex((prev) => prev === null ? null : (prev - 1 + activeFolderItems.length) % activeFolderItems.length);
+        }
         if (e.key === "Escape") setSelectedIndex(null);
       } else if (activeFolder) {
         if (e.key === "Escape") setActiveFolder(null);
@@ -143,13 +118,15 @@ export default function GalleryClient({ events }: GalleryClientProps) {
       window.removeEventListener("keydown", handleKeyDown);
       document.body.style.overflow = "unset";
     };
-  }, [selectedIndex, activeFolder, activeFolderItems.length]);
-  
+  }, [selectedIndex, activeFolder, groupedByEvent, activeFolderItems.length]);
+
   const handleDownload = (e: React.MouseEvent, url: string, filename: string) => {
     e.stopPropagation();
     const a = document.createElement("a");
     a.href = url;
     a.download = filename;
+    a.target = "_blank";
+    a.rel = "noopener noreferrer";
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -165,12 +142,12 @@ export default function GalleryClient({ events }: GalleryClientProps) {
           text: `Check out the media archive for ${eventTitle} at GeekRoom!`,
           url: url,
         });
-      } catch (err) {
-        console.error("Error sharing", err);
+      } catch {
+        // User cancelled share
       }
     } else {
       navigator.clipboard.writeText(url);
-      alert("Link copied to clipboard!");
+      showToast("Link copied to clipboard!");
     }
   };
 
@@ -179,16 +156,55 @@ export default function GalleryClient({ events }: GalleryClientProps) {
     return Math.abs(offset) * velocity;
   };
 
-  const getMasonryHeight = (idx: number) => {
-    const pattern = [300, 450, 350, 400];
-    return pattern[idx % pattern.length];
+  // Enhanced 3D tilt with parallax depth layers
+  const handleTiltMove = (e: React.MouseEvent, slug: string) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const nx = (e.clientX - rect.left) / rect.width - 0.5;
+    const ny = (e.clientY - rect.top) / rect.height - 0.5;
+    setTilt((prev) => ({
+      ...prev,
+      [slug]: {
+        x: ny * -10,
+        y: nx * 10,
+        mx: nx * 20,
+        my: ny * 20,
+      },
+    }));
+  };
+
+  const handleTiltLeave = (slug: string) => {
+    setTilt((prev) => ({
+      ...prev,
+      [slug]: { x: 0, y: 0, mx: 0, my: 0 },
+    }));
   };
 
   return (
-    <main className="min-h-screen bg-[#050505] text-[#ededed] relative overflow-hidden">
+    <main className="min-h-screen bg-[#050505] text-[#ededed] relative overflow-hidden cursor-none">
+      {/* === ADDON: Interactive Particle Mesh Background === */}
+      <ParticleBackground />
+
+      {/* === ADDON: Magnetic Custom Cursor === */}
+      <CustomCursor />
+
       {/* Background Overlay Nodes */}
       <div className="fixed top-0 left-0 w-full h-[600px] bg-[radial-gradient(ellipse_at_top,rgba(0,242,255,0.08)_0%,transparent_50%)] pointer-events-none z-0" />
       <div className="fixed bottom-0 right-0 w-[800px] h-[800px] bg-[radial-gradient(circle_at_bottom_right,rgba(255,140,0,0.05)_0%,transparent_50%)] pointer-events-none z-0" />
+
+      {/* Toast Notification */}
+      <AnimatePresence>
+        {toast && (
+          <motion.div
+            initial={{ opacity: 0, y: 50, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.9 }}
+            className="fixed bottom-8 left-1/2 -translate-x-1/2 z-[200] bg-[#00F2FF] text-black font-mono text-sm px-6 py-3 rounded-full shadow-[0_0_30px_rgba(0,242,255,0.4)] flex items-center gap-2"
+          >
+            <Check className="w-4 h-4" />
+            {toast}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Premium Stats & Filters Header */}
       <div className="relative pt-24 pb-8 px-4 text-center z-10">
@@ -219,43 +235,21 @@ export default function GalleryClient({ events }: GalleryClientProps) {
             transition={{ delay: 0.2, duration: 0.5 }}
             className="w-full bg-[#050505]/80 backdrop-blur-xl border border-white/10 rounded-3xl p-4 md:p-6 shadow-[0_0_30px_rgba(0,0,0,0.5)] flex flex-col md:flex-row justify-between items-center gap-6"
           >
-            {/* Left Box: Stats Cards */}
-            <div className="flex w-full md:w-auto justify-between md:justify-start gap-4 md:gap-8 flex-wrap">
-              <div className="flex flex-col items-center md:items-start group">
-                <span className="text-3xl font-black text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.3)] transition-all duration-300 group-hover:text-[#00F2FF] group-hover:drop-shadow-[0_0_15px_rgba(0,242,255,0.5)]">
-                  {mediaItems.length.toString().padStart(2, '0')}
-                </span>
-                <span className="text-[10px] uppercase tracking-widest font-mono text-gray-400 group-hover:text-white transition-colors duration-300">
-                  Total
-                </span>
-              </div>
-              <div className="w-px h-10 bg-white/10 hidden md:block"></div>
-              <div className="flex flex-col items-center md:items-start group">
-                <span className="text-3xl font-black text-[#00F2FF] drop-shadow-[0_0_8px_rgba(0,242,255,0.3)] transition-all duration-300 group-hover:drop-shadow-[0_0_15px_rgba(0,242,255,0.8)]">
-                  {mediaItems.filter(m => m.type === "photo").length.toString().padStart(2, '0')}
-                </span>
-                <span className="text-[10px] uppercase tracking-widest font-mono text-gray-400 group-hover:text-white transition-colors duration-300">
-                  Photos
-                </span>
-              </div>
-              <div className="w-px h-10 bg-white/10 hidden md:block"></div>
-              <div className="flex flex-col items-center md:items-start group">
-                <span className="text-3xl font-black text-[#FF8C00] drop-shadow-[0_0_8px_rgba(255,140,0,0.3)] transition-all duration-300 group-hover:drop-shadow-[0_0_15px_rgba(255,140,0,0.8)]">
-                  {mediaItems.filter(m => m.type === "video").length.toString().padStart(2, '0')}
-                </span>
-                <span className="text-[10px] uppercase tracking-widest font-mono text-gray-400 group-hover:text-white transition-colors duration-300">
-                  Videos
-                </span>
-              </div>
-            </div>
+            {/* === ADDON: 3D Flip Counter Stats === */}
+            <FlipCounter
+              total={mediaItems.length}
+              photos={mediaItems.filter(m => m.type === "photo").length}
+              videos={mediaItems.filter(m => m.type === "video").length}
+            />
 
             {/* Right Box: Segmented Filters */}
-            <div className="flex bg-[#050505] p-1.5 rounded-full border border-white/10 shadow-inner w-full md:w-auto justify-center">
+            <div className="relative flex bg-[#050505] p-1.5 rounded-full border border-white/10 shadow-inner w-full md:w-auto justify-center">
               {(["all", "photos", "videos"] as MediaType[]).map((type) => (
                 <button
                   key={type}
                   onClick={() => setFilter(type)}
-                  className={`relative px-6 py-3 md:px-8 md:py-3 rounded-full font-mono text-xs md:text-sm uppercase tracking-widest font-bold transition-all duration-300 flex-1 md:flex-none ${
+                  data-clickable
+                  className={`relative z-10 px-6 py-3 md:px-8 md:py-3 rounded-full font-mono text-xs md:text-sm uppercase tracking-widest font-bold transition-all duration-300 flex-1 md:flex-none cursor-pointer ${
                     filter === type
                       ? "text-black"
                       : "text-gray-400 hover:text-white hover:bg-white/5"
@@ -264,11 +258,12 @@ export default function GalleryClient({ events }: GalleryClientProps) {
                   {filter === type && (
                     <motion.div
                       layoutId="filterTabIndicator"
-                      className="absolute inset-0 bg-[#00F2FF] shadow-[0_0_20px_rgba(0,242,255,0.6)] rounded-full -z-10"
+                      className="absolute inset-0 bg-[#00F2FF] shadow-[0_0_20px_rgba(0,242,255,0.6)] rounded-full"
+                      style={{ zIndex: 0 }}
                       transition={{ type: "spring", stiffness: 400, damping: 30 }}
                     />
                   )}
-                  <span className="relative z-10">{type}</span>
+                  <span className="relative" style={{ zIndex: 1 }}>{type}</span>
                 </button>
               ))}
             </div>
@@ -279,7 +274,7 @@ export default function GalleryClient({ events }: GalleryClientProps) {
       {/* Main Container */}
       <div className="relative z-10 max-w-[1600px] mx-auto px-4 py-12 min-h-[60vh]">
         <AnimatePresence mode="wait">
-          {!activeFolder ? (
+          {!effectiveFolder ? (
             /* ================= FOLDER GRID VIEW ================= */
             <motion.div
               key="folder-view"
@@ -288,10 +283,13 @@ export default function GalleryClient({ events }: GalleryClientProps) {
               exit={{ opacity: 0, scale: 1.05 }}
               transition={{ duration: 0.4 }}
               className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8"
+              style={{ perspective: "1200px" }}
             >
               {Object.entries(groupedByEvent).map(([eventSlug, items], index) => {
                 const eventData = events.find(e => e.slug === eventSlug);
                 const thumbnail = items.find(i => i.type === "photo")?.src || items[0]?.src;
+                const cardTilt = tilt[eventSlug] || { x: 0, y: 0, mx: 0, my: 0 };
+                const isHovered = hoveredFolder === eventSlug;
 
                 return (
                   <motion.div
@@ -302,46 +300,76 @@ export default function GalleryClient({ events }: GalleryClientProps) {
                     exit={{ opacity: 0, scale: 0.8, filter: "blur(10px)" }}
                     transition={{ delay: index * 0.05, duration: 0.5, ease: "easeOut" }}
                     onClick={() => setActiveFolder(eventSlug)}
-                    className="group cursor-pointer flex flex-col relative w-full rounded-2xl bg-[#0a0a0a] border border-white/10 overflow-hidden perspective-[1000px] transition-all duration-300 hover:border-[#00F2FF]/40 hover:shadow-[0_0_30px_rgba(0,242,255,0.15)]"
-                    whileHover={{ y: -8, scale: 1.02 }}
+                    onMouseMove={(e) => handleTiltMove(e, eventSlug)}
+                    onMouseLeave={() => { handleTiltLeave(eventSlug); setHoveredFolder(null); }}
+                    onMouseEnter={() => setHoveredFolder(eventSlug)}
+                    data-clickable
+                    className="group cursor-pointer flex flex-col relative w-full rounded-2xl bg-[#0a0a0a] border border-white/10 overflow-hidden holo-border"
+                    style={{
+                      transform: `perspective(1000px) rotateX(${cardTilt.x}deg) rotateY(${cardTilt.y}deg)`,
+                      transformStyle: "preserve-3d",
+                      transition: "transform 0.15s ease-out, border-color 0.3s, box-shadow 0.3s",
+                      boxShadow: `
+                        0 2px 4px rgba(0, 0, 0, 0.3),
+                        0 8px 16px rgba(0, 0, 0, 0.25),
+                        0 24px 48px rgba(0, 0, 0, 0.2),
+                        0 0 0 1px rgba(255, 255, 255, 0.03)
+                      `,
+                    }}
                   >
-                    {/* Top Section: Thumbnail */}
+                    {/* Top Section: Thumbnail with parallax layers */}
                     <div className="relative w-full aspect-video bg-[#050505] overflow-hidden">
                       {thumbnail ? (
                         <>
-                          <Image
-                            src={thumbnail}
-                            alt={eventSlug}
-                            fill
-                            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                            className="object-cover transition-transform duration-700 group-hover:scale-110"
-                          />
+                          {/* === Parallax Layer 1: Thumbnail (deepest) === */}
+                          <div
+                            className="absolute inset-0 transition-transform duration-150 ease-out"
+                            style={{
+                              transform: `translateX(${cardTilt.mx * 0.3}px) translateY(${cardTilt.my * 0.3}px) scale(1.08)`,
+                              transformStyle: "preserve-3d",
+                            }}
+                          >
+                            <Image
+                              src={thumbnail}
+                              alt={`${eventData?.title || eventSlug} cover photo`}
+                              fill
+                              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                              className="object-cover transition-transform duration-700 group-hover:scale-110"
+                            />
+                          </div>
+
                           {/* Dark Fade Overlay for Readability */}
-                          <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-[#0A0A0A]/40 to-black/20" />
-                          
-                          {/* Hover Action Overlay */}
-                          <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center gap-3 md:gap-4 backdrop-blur-sm z-20">
-                            <motion.button 
-                              initial={{ y: 20, opacity: 0 }}
+                          <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-[#0A0A0A]/40 to-black/20 z-10" />
+
+                          {/* === Parallax Layer 2: Hover Action Overlay (mid layer) === */}
+                          <div
+                            className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center gap-3 md:gap-4 backdrop-blur-sm z-20"
+                            style={{
+                              transform: `translateX(${cardTilt.mx * 0.6}px) translateY(${cardTilt.my * 0.6}px) translateZ(30px)`,
+                              transition: "opacity 0.3s, transform 0.15s ease-out",
+                            }}
+                          >
+                            <motion.button
                               whileHover={{ scale: 1.1 }}
-                              className="group-hover:translate-y-0 translate-y-4 transition-all duration-300 delay-75 w-12 h-12 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-white hover:bg-[#00F2FF] hover:border-[#00F2FF] hover:text-black hover:shadow-[0_0_15px_rgba(0,242,255,0.5)]"
+                              className="group-hover:translate-y-0 translate-y-4 transition-all duration-300 delay-75 w-12 h-12 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-white hover:bg-[#00F2FF] hover:border-[#00F2FF] hover:text-black hover:shadow-[0_0_15px_rgba(0,242,255,0.5)] cursor-pointer"
                               onClick={(e) => { e.stopPropagation(); setActiveFolder(eventSlug); }}
+                              aria-label={`Open ${eventData?.title || eventSlug} folder`}
                             >
                               <FolderOpen className="w-5 h-5" />
                             </motion.button>
-                            <motion.button 
-                              initial={{ y: 20, opacity: 0 }}
+                            <motion.button
                               whileHover={{ scale: 1.1 }}
-                              className="group-hover:translate-y-0 translate-y-4 transition-all duration-300 delay-100 w-12 h-12 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-white hover:bg-white hover:text-black hover:shadow-[0_0_15px_rgba(255,255,255,0.5)]"
+                              className="group-hover:translate-y-0 translate-y-4 transition-all duration-300 delay-100 w-12 h-12 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-white hover:bg-white hover:text-black hover:shadow-[0_0_15px_rgba(255,255,255,0.5)] cursor-pointer"
                               onClick={(e) => handleDownload(e, thumbnail, `${eventSlug}-cover`)}
+                              aria-label="Download cover image"
                             >
                               <Download className="w-5 h-5" />
                             </motion.button>
-                            <motion.button 
-                              initial={{ y: 20, opacity: 0 }}
+                            <motion.button
                               whileHover={{ scale: 1.1 }}
-                              className="group-hover:translate-y-0 translate-y-4 transition-all duration-300 delay-150 w-12 h-12 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-white hover:bg-[#FF8C00] hover:border-[#FF8C00] hover:text-black hover:shadow-[0_0_15px_rgba(255,140,0,0.5)]"
+                              className="group-hover:translate-y-0 translate-y-4 transition-all duration-300 delay-150 w-12 h-12 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-white hover:bg-[#FF8C00] hover:border-[#FF8C00] hover:text-black hover:shadow-[0_0_15px_rgba(255,140,0,0.5)] cursor-pointer"
                               onClick={(e) => handleShare(e, eventData?.title || eventSlug, eventSlug)}
+                              aria-label="Share gallery"
                             >
                               <Share2 className="w-5 h-5" />
                             </motion.button>
@@ -353,20 +381,65 @@ export default function GalleryClient({ events }: GalleryClientProps) {
                         </div>
                       )}
 
-                      {/* Stacked Preview Indicators (Optional Depth) */}
+                      {/* === ADDON: 3D Stacked Deck Preview === */}
                       {items.length > 1 && (
-                        <div className="absolute top-4 right-4 flex -space-x-2 z-10 opacity-70 group-hover:opacity-100 transition-opacity">
-                          {items.slice(1, 4).map((_, i) => (
-                            <div key={i} className="w-6 h-6 rounded-md bg-[#0A0A0A]/80 border border-white/20 backdrop-blur-md flex items-center justify-center shadow-lg transform rotate-[-5deg] origin-bottom-right" style={{ zIndex: 3 - i, rotate: `${(i - 1) * 5}deg` }}>
-                               <Layers className="w-3 h-3 text-white/50" />
-                            </div>
-                          ))}
+                        <div
+                          className="absolute top-4 right-4 flex z-10"
+                          style={{
+                            transformStyle: "preserve-3d",
+                            perspective: "500px",
+                          }}
+                        >
+                          {items.slice(1, 4).map((mediaItem, i) => {
+                            const fanAngle = isHovered ? (i - 1) * 15 : (i - 1) * 5;
+                            const fanX = isHovered ? (i - 1) * 12 : 0;
+                            const fanZ = isHovered ? (2 - i) * 8 : (15 - i * 5);
+                            return (
+                              <div
+                                key={i}
+                                className="deck-card w-8 h-8 rounded-md overflow-hidden border border-white/20 shadow-lg"
+                                style={{
+                                  background: mediaItem.src
+                                    ? `url(${mediaItem.src}) center/cover`
+                                    : "rgba(0, 242, 255, 0.08)",
+                                  transform: `rotate(${fanAngle}deg) translateX(${fanX}px) translateZ(${fanZ}px)`,
+                                  transformStyle: "preserve-3d",
+                                  zIndex: 3 - i,
+                                  opacity: isHovered ? 1 : 0.7,
+                                  marginLeft: i > 0 ? (isHovered ? "-4px" : "-8px") : "0",
+                                }}
+                              >
+                                {!mediaItem.src && (
+                                  <div className="w-full h-full flex items-center justify-center">
+                                    <Layers className="w-3 h-3 text-white/50" />
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          })}
                         </div>
                       )}
+
+                      {/* Glow Floor */}
+                      <div
+                        className="absolute -bottom-1 left-4 right-4 h-3 rounded-full opacity-0 group-hover:opacity-60 transition-opacity duration-300 pointer-events-none"
+                        style={{
+                          background: "radial-gradient(ellipse, rgba(0, 242, 255, 0.3), transparent)",
+                          filter: "blur(6px)",
+                          transform: "scaleX(0.8)",
+                        }}
+                      />
                     </div>
 
-                    {/* Middle Section: Info */}
-                    <div className="relative px-6 py-5 z-10 flex flex-col gap-2">
+                    {/* === Parallax Layer 3: Info Section (front layer) === */}
+                    <div
+                      className="relative px-6 py-5 z-10 flex flex-col gap-2"
+                      style={{
+                        transform: `translateX(${cardTilt.mx * 1}px) translateY(${cardTilt.my * 1}px) translateZ(40px)`,
+                        transition: "transform 0.15s ease-out",
+                        transformStyle: "preserve-3d",
+                      }}
+                    >
                        <div className="flex items-center gap-4">
                          <div className="w-10 h-10 rounded-xl bg-[#00F2FF]/10 flex items-center justify-center border border-[#00F2FF]/30 group-hover:bg-[#00F2FF] group-hover:shadow-[0_0_15px_rgba(0,242,255,0.4)] transition-all duration-300 shrink-0">
                            <FolderOpen className="w-5 h-5 text-[#00F2FF] group-hover:text-black transition-colors" />
@@ -377,13 +450,20 @@ export default function GalleryClient({ events }: GalleryClientProps) {
                        </div>
                     </div>
 
-                    {/* Bottom Section: Metadata */}
-                    <div className="mt-auto p-5 pt-0 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-t border-white/5 pt-4 z-10">
+                    {/* === Parallax Layer 4: Metadata (frontmost) === */}
+                    <div
+                      className="mt-auto p-5 pt-0 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-t border-white/5 pt-4 z-10"
+                      style={{
+                        transform: `translateX(${cardTilt.mx * 0.5}px) translateY(${cardTilt.my * 0.5}px) translateZ(20px)`,
+                        transition: "transform 0.15s ease-out",
+                        transformStyle: "preserve-3d",
+                      }}
+                    >
                       <div className="flex items-center gap-1.5 text-gray-400 group-hover:text-gray-300 transition-colors">
                         <Calendar className="w-3.5 h-3.5" />
                         <span className="text-[10px] sm:text-xs font-mono uppercase tracking-widest">{eventData?.date || "Archive"}</span>
                       </div>
-                      
+
                       <div className="flex flex-wrap gap-1.5">
                         {items.filter(i => i.type === "photo").length > 0 && (
                           <span className="flex items-center gap-1 text-[10px] font-mono font-bold text-[#00F2FF] bg-[#00F2FF]/10 px-2.5 py-1 rounded-md border border-[#00F2FF]/20 group-hover:border-[#00F2FF]/40 transition-colors">
@@ -399,9 +479,6 @@ export default function GalleryClient({ events }: GalleryClientProps) {
                         )}
                       </div>
                     </div>
-
-                    {/* Hover Glow Effect */}
-                    <div className="absolute inset-0 rounded-[2rem] bg-gradient-to-t from-[#00F2FF]/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-500" />
                   </motion.div>
                 );
               })}
@@ -415,7 +492,7 @@ export default function GalleryClient({ events }: GalleryClientProps) {
             /* ================= INSIDE FOLDER VIEW ================= */
             <motion.div
               key="inside-folder"
-              layoutId={`folder-${activeFolder}`}
+              layoutId={`folder-${effectiveFolder}`}
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.8 }}
@@ -430,25 +507,26 @@ export default function GalleryClient({ events }: GalleryClientProps) {
                     animate={{ x: 0, opacity: 1 }}
                     transition={{ delay: 0.1 }}
                     onClick={() => setActiveFolder(null)}
-                    className="group flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-gray-400 hover:text-white transition-colors w-max"
+                    data-clickable
+                    className="group flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-gray-400 hover:text-white transition-colors w-max cursor-pointer"
                   >
                     <div className="p-1.5 rounded-full bg-white/5 border border-white/10 group-hover:bg-white/10 transition-colors">
                       <ChevronLeft className="w-4 h-4" />
                     </div>
                     Back to Gallery
                   </motion.button>
-                  <motion.h2 
+                  <motion.h2
                     initial={{ y: 20, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ delay: 0.2 }}
-                    className="text-4xl md:text-6xl font-black text-white uppercase tracking-wider relative drop-shadow-[0_0_15px_rgba(255,255,255,0.4)]" 
+                    className="text-4xl md:text-6xl font-black text-white uppercase tracking-wider relative drop-shadow-[0_0_15px_rgba(255,255,255,0.4)]"
                     style={{ fontFamily: "'Bebas Neue', sans-serif" }}
                   >
-                    {events.find(e => e.slug === activeFolder)?.title || activeFolder}
+                    {events.find(e => e.slug === effectiveFolder)?.title || effectiveFolder}
                   </motion.h2>
                 </div>
-                
-                <motion.div 
+
+                <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.3 }}
@@ -456,12 +534,12 @@ export default function GalleryClient({ events }: GalleryClientProps) {
                 >
                   <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/40">
                     <Calendar className="w-3.5 h-3.5 text-[#00F2FF]" />
-                    {events.find(e => e.slug === activeFolder)?.date || "Archived"}
+                    {events.find(e => e.slug === effectiveFolder)?.date || "Archived"}
                   </div>
-                  {events.find(e => e.slug === activeFolder)?.location && (
+                  {events.find(e => e.slug === effectiveFolder)?.location && (
                     <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/40">
                       <MapPin className="w-3.5 h-3.5 text-[#00F2FF]" />
-                      {events.find(e => e.slug === activeFolder)?.location}
+                      {events.find(e => e.slug === effectiveFolder)?.location}
                     </div>
                   )}
                   <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/40">
@@ -471,10 +549,11 @@ export default function GalleryClient({ events }: GalleryClientProps) {
                 </motion.div>
               </div>
 
-              {/* Clean Grid Overview */}
-              <div className="columns-2 md:columns-3 lg:columns-4 gap-4 md:gap-6 space-y-4 md:space-y-6">
+              {/* === ADDON: Masonry Grid with Glitch Effect on Hover === */}
+              <div className="columns-2 md:columns-3 lg:columns-4 gap-4 md:gap-6 space-y-4 md:space-y-6" style={{ perspective: "1200px" }}>
                 {activeFolderItems.map((item, index) => {
                   const isLoaded = loadedImages.has(item.src);
+                  const depthShift = (index % 3) * 4;
 
                   return (
                     <motion.div
@@ -483,11 +562,23 @@ export default function GalleryClient({ events }: GalleryClientProps) {
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, scale: 0.9 }}
-                      transition={{ 
+                      transition={{
                         delay: index * 0.03,
                         duration: 0.4
                       }}
-                      className="relative group cursor-pointer w-full rounded-xl md:rounded-2xl overflow-hidden bg-[#0A0A0A] shadow-lg break-inside-avoid border border-white/5 hover:border-white/20 transition-all duration-300"
+                      className="relative group cursor-pointer w-full rounded-xl md:rounded-2xl overflow-hidden bg-[#0A0A0A] break-inside-avoid border border-white/5 hover:border-[#00F2FF]/30 glitch-on-hover"
+                      data-clickable
+                      style={{
+                        boxShadow: `
+                          0 2px 4px rgba(0, 0, 0, 0.3),
+                          0 8px 16px rgba(0, 0, 0, 0.2),
+                          0 ${8 + depthShift}px ${24 + depthShift * 2}px rgba(0, 0, 0, 0.15),
+                          0 0 0 1px rgba(255, 255, 255, 0.02)
+                        `,
+                        transform: `translateZ(${depthShift}px)`,
+                        transformStyle: "preserve-3d",
+                        transition: "border-color 0.3s, box-shadow 0.3s, transform 0.3s",
+                      }}
                       onClick={() => openLightbox(index)}
                     >
                       {/* Loading State */}
@@ -522,7 +613,7 @@ export default function GalleryClient({ events }: GalleryClientProps) {
                       ) : (
                         <Image
                           src={item.src}
-                          alt={`${item.eventTitle} media`}
+                          alt={`${item.eventTitle} photo ${index + 1}`}
                           width={800}
                           height={1200}
                           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
@@ -533,13 +624,22 @@ export default function GalleryClient({ events }: GalleryClientProps) {
 
                       {/* Hover Overlay with View Icon */}
                       <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center z-10 backdrop-blur-[2px]">
-                        <motion.div 
+                        <motion.div
                           className="w-12 h-12 rounded-full bg-white/20 border border-white/30 flex items-center justify-center text-white backdrop-blur-md transform scale-50 group-hover:scale-100 transition-transform duration-300"
                         >
                           {item.type === "video" ? <Film className="w-5 h-5" /> : <Search className="w-5 h-5" />}
                         </motion.div>
                       </div>
 
+                      {/* Glow Floor */}
+                      <div
+                        className="absolute -bottom-1 left-4 right-4 h-3 rounded-full opacity-0 group-hover:opacity-50 transition-opacity duration-300 pointer-events-none"
+                        style={{
+                          background: "radial-gradient(ellipse, rgba(0, 242, 255, 0.3), transparent)",
+                          filter: "blur(6px)",
+                          transform: "scaleX(0.7)",
+                        }}
+                      />
                     </motion.div>
                   );
                 })}
@@ -549,9 +649,9 @@ export default function GalleryClient({ events }: GalleryClientProps) {
         </AnimatePresence>
       </div>
 
-      {/* Lightbox Modal */}
+      {/* Lightbox Modal with 3D Scale-from-Origin */}
       <AnimatePresence>
-        {selectedIndex !== null && activeFolder && (
+        {selectedIndex !== null && effectiveFolder && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -564,14 +664,16 @@ export default function GalleryClient({ events }: GalleryClientProps) {
 
             {/* Top Toolbar */}
             <div className="absolute top-0 inset-x-0 p-4 md:p-6 flex justify-between items-center z-50 pointer-events-none">
-              <div /> {/* Spacer for flex-between */}
-              
+              <div />
+
               <div className="flex gap-3 pointer-events-auto">
                 <motion.button
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                   onClick={() => setSelectedIndex(null)}
-                  className="bg-white/10 hover:bg-white/20 border border-white/10 text-white rounded-full p-3 transition-colors backdrop-blur-md"
+                  aria-label="Close lightbox"
+                  data-clickable
+                  className="bg-white/10 hover:bg-white/20 border border-white/10 text-white rounded-full p-3 transition-colors backdrop-blur-md cursor-pointer"
                 >
                   <X className="h-5 w-5 md:h-6 md:w-6" />
                 </motion.button>
@@ -585,7 +687,9 @@ export default function GalleryClient({ events }: GalleryClientProps) {
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                   onClick={(e) => { e.stopPropagation(); prevImage(); }}
-                  className="pointer-events-auto bg-white/5 hover:bg-white/10 border border-white/10 text-white rounded-full p-4 transition-all duration-300 backdrop-blur-md"
+                  aria-label="Previous image"
+                  data-clickable
+                  className="pointer-events-auto bg-white/5 hover:bg-white/10 border border-white/10 text-white rounded-full p-4 transition-all duration-300 backdrop-blur-md cursor-pointer"
                 >
                   <ChevronLeft className="h-8 w-8" />
                 </motion.button>
@@ -593,7 +697,9 @@ export default function GalleryClient({ events }: GalleryClientProps) {
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                   onClick={(e) => { e.stopPropagation(); nextImage(); }}
-                  className="pointer-events-auto bg-white/5 hover:bg-white/10 border border-white/10 text-white rounded-full p-4 transition-all duration-300 backdrop-blur-md"
+                  aria-label="Next image"
+                  data-clickable
+                  className="pointer-events-auto bg-white/5 hover:bg-white/10 border border-white/10 text-white rounded-full p-4 transition-all duration-300 backdrop-blur-md cursor-pointer"
                 >
                   <ChevronRight className="h-8 w-8" />
                 </motion.button>
@@ -608,9 +714,9 @@ export default function GalleryClient({ events }: GalleryClientProps) {
                   custom={direction}
                   layoutId={`media-${activeFolderItems[selectedIndex]?.src}`}
                   variants={{
-                    enter: (d: number) => ({ x: d > 0 ? 1000 : -1000, opacity: 0, scale: 0.9 }),
-                    center: { x: 0, opacity: 1, scale: 1 },
-                    exit: (d: number) => ({ x: d < 0 ? 1000 : -1000, opacity: 0, scale: 0.9, transition: { duration: 0.2 } })
+                    enter: (d: number) => ({ x: d > 0 ? 1000 : -1000, opacity: 0, scale: 0.9, rotateY: d > 0 ? 10 : -10 }),
+                    center: { x: 0, opacity: 1, scale: 1, rotateY: 0 },
+                    exit: (d: number) => ({ x: d < 0 ? 1000 : -1000, opacity: 0, scale: 0.9, rotateY: d < 0 ? 10 : -10, transition: { duration: 0.2 } })
                   }}
                   initial="enter"
                   animate="center"
@@ -629,6 +735,7 @@ export default function GalleryClient({ events }: GalleryClientProps) {
                   }}
                   className="absolute w-full h-full p-4 md:p-16 flex items-center justify-center pointer-events-auto cursor-grab active:cursor-grabbing"
                   onClick={(e) => e.stopPropagation()}
+                  style={{ transformPerspective: 1000 }}
                 >
                   {activeFolderItems[selectedIndex]?.type === "video" ? (
                     <video
@@ -641,7 +748,7 @@ export default function GalleryClient({ events }: GalleryClientProps) {
                   ) : (
                      <Image
                       src={activeFolderItems[selectedIndex]?.src}
-                      alt={`Gallery Fullscreen ${selectedIndex + 1}`}
+                      alt={`${activeFolderItems[selectedIndex]?.eventTitle} full view ${selectedIndex + 1}`}
                       fill
                       className="object-contain drop-shadow-2xl select-none"
                       draggable={false}
@@ -652,7 +759,7 @@ export default function GalleryClient({ events }: GalleryClientProps) {
                 </motion.div>
               </AnimatePresence>
             </div>
-            
+
             {/* Bottom Status Bar */}
             <div className="absolute bottom-6 md:bottom-10 inset-x-0 flex justify-center z-50 pointer-events-none">
               <div className="bg-black/80 backdrop-blur-xl border border-white/10 px-6 py-2 rounded-full flex items-center gap-4 shadow-2xl">
@@ -664,7 +771,9 @@ export default function GalleryClient({ events }: GalleryClientProps) {
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                   onClick={(e) => { e.stopPropagation(); handleDownload(e, activeFolderItems[selectedIndex].src, `${activeFolderItems[selectedIndex].event}-${selectedIndex}`); }}
-                  className="pointer-events-auto text-white/70 hover:text-white transition-colors"
+                  className="pointer-events-auto text-white/70 hover:text-white transition-colors cursor-pointer"
+                  aria-label="Download image"
+                  data-clickable
                 >
                   <Download className="h-4 w-4" />
                 </motion.button>

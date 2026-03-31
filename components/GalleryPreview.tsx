@@ -2,24 +2,29 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight, Image as ImageIcon } from "lucide-react";
 import { EventItem } from "@/app/actions/eventActions";
 
 export function GalleryPreview({ events }: { events: EventItem[] }) {
-  // Extract all gallery images from all events
-  const allImages = events.flatMap(evt => evt.gallery || []);
+  // Extract all gallery images from all events, preserving event context
+  const allImages: Array<{ src: string; eventTitle: string }> = [];
+  events.forEach(evt => {
+    (evt.gallery || []).forEach(src => {
+      allImages.push({ src, eventTitle: evt.title });
+    });
+  });
 
   // Split images into two rows for the infinite sliders.
-  // If no images exist, fallback gracefully or show placeholders if we absolutely had to (we'll just use what's available).
   const half = Math.ceil(allImages.length / 2);
   const topRow = allImages.slice(0, half);
   const bottomRow = allImages.slice(half);
 
-  // Fallback demo images if the database is literally empty of gallery photos
+  // Fallback demo images if the database is empty
   const fallbackImages = [
-    "https://images.unsplash.com/photo-1540317580384-e5d43867caa6?auto=format&fit=crop&q=80&w=800",
-    "https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?auto=format&fit=crop&q=80&w=800",
-    "https://images.unsplash.com/photo-1528605248644-14dd04022da1?auto=format&fit=crop&q=80&w=800"
+    { src: "https://images.unsplash.com/photo-1540317580384-e5d43867caa6?auto=format&fit=crop&q=80&w=800", eventTitle: "Hackathon Event" },
+    { src: "https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?auto=format&fit=crop&q=80&w=800", eventTitle: "Tech Workshop" },
+    { src: "https://images.unsplash.com/photo-1528605248644-14dd04022da1?auto=format&fit=crop&q=80&w=800", eventTitle: "Community Meetup" }
   ];
 
   const finalTopRow = topRow.length > 0 ? topRow : fallbackImages;
@@ -80,8 +85,8 @@ export function GalleryPreview({ events }: { events: EventItem[] }) {
             transition={{ repeat: Infinity, ease: "linear", duration: 40 }}
             className="flex gap-6 w-full"
           >
-            {duplicatedTop.map((src, i) => (
-              <GalleryImage key={`top-${i}`} src={src} />
+            {duplicatedTop.map((item, i) => (
+              <GalleryImage key={`top-${i}`} src={item.src} eventTitle={item.eventTitle} index={i} />
             ))}
           </motion.div>
         </div>
@@ -93,8 +98,8 @@ export function GalleryPreview({ events }: { events: EventItem[] }) {
             transition={{ repeat: Infinity, ease: "linear", duration: 35 }}
             className="flex gap-6 w-full"
           >
-            {duplicatedBottom.map((src, i) => (
-              <GalleryImage key={`bottom-${i}`} src={src} />
+            {duplicatedBottom.map((item, i) => (
+              <GalleryImage key={`bottom-${i}`} src={item.src} eventTitle={item.eventTitle} index={i} />
             ))}
           </motion.div>
         </div>
@@ -108,7 +113,7 @@ export function GalleryPreview({ events }: { events: EventItem[] }) {
       >
         <Link 
           href="/gallery" 
-          className="group flex flex-col items-center justify-center gap-2 "
+          className="group flex flex-col items-center justify-center gap-2 cursor-pointer"
         >
           <div className="w-14 h-14 rounded-full border border-white/20 bg-white/5 flex items-center justify-center transition-all duration-300 group-hover:bg-white group-hover:border-white group-hover:text-black">
             <ArrowRight className="w-6 h-6 -rotate-45 group-hover:rotate-0 transition-all duration-300" />
@@ -122,14 +127,16 @@ export function GalleryPreview({ events }: { events: EventItem[] }) {
   );
 }
 
-function GalleryImage({ src }: { src: string }) {
+function GalleryImage({ src, eventTitle, index }: { src: string; eventTitle: string; index: number }) {
   return (
     <div className="relative w-[300px] md:w-[450px] aspect-[4/3] rounded-2xl overflow-hidden shrink-0 group border border-white/5 bg-[#0a0a0a]">
       <div className="absolute inset-0 bg-black/40 group-hover:bg-black/0 transition-colors duration-500 z-10" />
-      <img 
+      <Image 
         src={src} 
-        alt="Geekroom Gallery Event" 
-        className="w-full h-full object-cover grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700 ease-out" 
+        alt={`${eventTitle} gallery photo ${index + 1}`}
+        fill
+        sizes="(max-width: 768px) 300px, 450px"
+        className="object-cover grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700 ease-out" 
       />
     </div>
   );
