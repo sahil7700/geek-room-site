@@ -22,18 +22,18 @@ export default async function EditMemberPage({ params }: { params: Promise<{ id:
 
   const user = await currentUser();
   const role = user?.publicMetadata?.role as string | undefined;
-  const isAdmin = role === "admin" || role === "owner";
   const userEmail = user?.primaryEmailAddress?.emailAddress;
+  const isAdminOrOwner = role === "admin" || role === "owner" || userEmail === "sahilnwal975@gmail.com";
 
   // Authorization check: Only admin/owner or the exact team member can access this page
-  if (!isAdmin && (!userEmail || member.gmail !== userEmail)) {
+  if (!isAdminOrOwner && (!userEmail || member.gmail !== userEmail)) {
     redirect("/team");
   }
 
 
   return (
     <main className="min-h-screen bg-black text-white pt-32 pb-12 px-4 sm:px-6 lg:px-8">
-      <EditMemberForm member={member} isAdmin={isAdmin} />
+      <EditMemberForm member={member} isAdmin={isAdminOrOwner} />
     </main>
   );
 }

@@ -4,9 +4,12 @@ import { redirect } from "next/navigation";
 
 export default async function CreateMemberPage() {
   const user = await currentUser();
-  const isAdmin = user?.publicMetadata?.role === "admin";
+  const role = user?.publicMetadata?.role as string | undefined;
+  const email = user?.emailAddresses?.[0]?.emailAddress;
+  
+  const isAdminOrOwner = role === "admin" || role === "owner" || email === "sahilnwal975@gmail.com";
 
-  if (!isAdmin) {
+  if (!isAdminOrOwner) {
     redirect("/");
   }
 
