@@ -41,7 +41,6 @@ export function Header({ hideJoin }: { hideJoin?: boolean }) {
 
   /* ── shared capsule style builder ─────────────────────────── */
   const capsuleBase: React.CSSProperties = {
-    display: "flex",
     alignItems: "center",
     borderRadius: "9999px",
     backdropFilter: "blur(20px)",
@@ -107,13 +106,9 @@ export function Header({ hideJoin }: { hideJoin?: boolean }) {
       >
         {/* ── TOP STATE: three separate zones ─────────────────── */}
         <div
+          className="px-4 md:px-7 py-4 w-full flex items-center justify-between mx-auto"
           style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
             maxWidth: "1280px",
-            margin: "0 auto",
-            padding: "16px 28px",
             pointerEvents: "auto",
             opacity: scrolled ? 0 : 1,
             transform: scrolled ? "translateY(-8px)" : "translateY(0)",
@@ -129,34 +124,17 @@ export function Header({ hideJoin }: { hideJoin?: boolean }) {
           {/* LEFT — wordmark (no capsule) */}
           <Link
             href="/"
-            style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: "8px" }}
+            className="flex items-center gap-1.5 md:gap-2 no-underline"
           >
             <img
               src="/logo.jpg"
               alt="Geek Room"
-              style={{
-                height: "32px",
-                width: "32px",
-                borderRadius: "6px",
-                objectFit: "cover",
-              }}
+              className="h-5 w-5 md:h-8 md:w-8 rounded-[4px] md:rounded-[6px] object-cover"
             />
-            <span style={{
-              fontFamily: "'Syne', system-ui, sans-serif",
-              fontWeight: 800,
-              fontSize: "1.35rem",
-              color: "#ededed",
-              letterSpacing: "-0.02em",
-            }}>
+            <span className="font-extrabold text-[1rem] md:text-[1.35rem] text-[#ededed] tracking-[-0.02em]" style={{ fontFamily: "'Syne', system-ui, sans-serif" }}>
               GEEK
             </span>
-            <span style={{
-              fontFamily: "'Syne', system-ui, sans-serif",
-              fontWeight: 800,
-              fontSize: "1.35rem",
-              color: "#4F9EFF",
-              letterSpacing: "-0.02em",
-            }}>
+            <span className="font-extrabold text-[1rem] md:text-[1.35rem] text-[#4F9EFF] tracking-[-0.02em]" style={{ fontFamily: "'Syne', system-ui, sans-serif" }}>
               ROOM
             </span>
           </Link>
@@ -190,9 +168,9 @@ export function Header({ hideJoin }: { hideJoin?: boolean }) {
           {/* RIGHT — Sign In transparent capsule */}
           <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
             {isLoaded && isSignedIn && (
-              <div style={{
+              <div className="hidden md:flex" style={{
                 ...capsuleBase,
-                padding: "5px",
+                padding: "4px",
                 background: "rgba(255,255,255,0.04)",
                 border: "1px solid rgba(255,255,255,0.08)",
               }}>
@@ -204,16 +182,12 @@ export function Header({ hideJoin }: { hideJoin?: boolean }) {
             {isLoaded && !isSignedIn && (
               <Link
                 href="/sign-in"
-                className="hidden md:inline-flex items-center justify-center"
+                className="hidden md:flex items-center justify-center font-medium transition-all duration-200 h-10 px-4 text-[0.85rem]"
                 style={{
                   ...capsuleBase,
-                  height: "42px",
-                  padding: "0 22px",
-                  fontSize: "0.9rem",
                   fontFamily: "'Inter', sans-serif",
-                  fontWeight: 500,
-                  color: "rgba(255,255,255,0.65)",
-                  background: "rgba(255,255,255,0.04)",
+                  color: "rgba(255,255,255,0.75)",
+                  background: "rgba(255,255,255,0.05)",
                   border: "1px solid rgba(255,255,255,0.12)",
                   textDecoration: "none",
                 }}
@@ -224,8 +198,8 @@ export function Header({ hideJoin }: { hideJoin?: boolean }) {
                 }}
                 onMouseLeave={(e) => {
                   (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.12)";
-                  (e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.65)";
-                  (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.04)";
+                  (e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.75)";
+                  (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.05)";
                 }}
               >
                 Sign in
@@ -240,24 +214,23 @@ export function Header({ hideJoin }: { hideJoin?: boolean }) {
               aria-controls="mobile-nav"
               aria-label={menuOpen ? "Close menu" : "Open menu"}
               onClick={() => setMenuOpen((o) => !o)}
-              className="flex md:hidden h-10 w-10 items-center justify-center rounded-full transition-all duration-200"
+              className="flex md:hidden items-center justify-center transition-all duration-200"
               style={{
-                color: "rgba(255,255,255,0.6)",
-                border: "1px solid rgba(255,255,255,0.08)",
-                background: "rgba(255,255,255,0.04)",
+                color: "rgba(255,255,255,0.8)",
+                background: "transparent",
+                border: "none",
+                padding: "8px",
               }}
             >
-              {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              {menuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
           </div>
         </div>
 
         {/* ── SCROLLED STATE: single centered capsule ──────────── */}
         <div
+          className="py-3 md:px-7 md:py-4 flex justify-center w-full max-w-7xl mx-auto"
           style={{
-            display: "flex",
-            justifyContent: "center",
-            padding: "14px 28px",
             pointerEvents: "auto",
             opacity: scrolled ? 1 : 0,
             transform: scrolled ? "translateY(0)" : "translateY(-12px)",
@@ -347,7 +320,7 @@ export function Header({ hideJoin }: { hideJoin?: boolean }) {
 
             {/* Sign In / UserButton */}
             {isLoaded && isSignedIn && (
-              <div style={{ padding: "3px 6px" }}>
+              <div style={{ padding: "3px 6px", display: "flex", alignItems: "center" }}>
                 <UserButton
                   appearance={{ elements: { userButtonAvatarBox: "w-7 h-7 border border-white/10" } }}
                 />
@@ -356,13 +329,13 @@ export function Header({ hideJoin }: { hideJoin?: boolean }) {
             {isLoaded && !isSignedIn && (
               <Link
                 href="/sign-in"
+                className="flex items-center justify-center font-medium"
                 style={{
                   ...capsuleBase,
                   height: "36px",
                   padding: "0 18px",
                   fontSize: "0.875rem",
                   fontFamily: "'Inter', sans-serif",
-                  fontWeight: 500,
                   color: "rgba(255,255,255,0.65)",
                   background: "rgba(79,158,255,0.07)",
                   border: "1px solid rgba(79,158,255,0.2)",
@@ -383,22 +356,45 @@ export function Header({ hideJoin }: { hideJoin?: boolean }) {
             )}
           </div>
 
-          {/* Mobile hamburger (visible when scrolled on mobile) */}
-          <button
-            type="button"
-            aria-expanded={menuOpen}
-            aria-controls="mobile-nav"
-            aria-label={menuOpen ? "Close menu" : "Open menu"}
-            onClick={() => setMenuOpen((o) => !o)}
-            className="flex md:hidden h-10 w-10 items-center justify-center rounded-full transition-all duration-200 ml-auto"
-            style={{
-              color: "rgba(255,255,255,0.6)",
-              border: "1px solid rgba(255,255,255,0.1)",
-              background: "rgba(14,14,18,0.88)",
-            }}
-          >
-            {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-          </button>
+          {/* Mobile scrolled navbar (visible on mobile only) */}
+          <div className="flex md:hidden w-full items-center justify-between px-4">
+            {/* Logo */}
+            <Link
+              href="/"
+              onClick={() => {
+                window.scrollTo({ top: 0, behavior: "smooth" });
+                setMenuOpen(false);
+              }}
+              className="flex items-center gap-1.5 no-underline"
+            >
+              <img
+                src="/logo.jpg"
+                alt="Geek Room"
+                className="h-5 w-5 rounded-[4px] object-cover"
+              />
+              <span className="font-extrabold text-[1rem] text-[#ededed] tracking-[-0.02em]" style={{ fontFamily: "'Syne', system-ui, sans-serif" }}>
+                GEEK
+              </span>
+              <span className="font-extrabold text-[1rem] text-[#4F9EFF] tracking-[-0.02em]" style={{ fontFamily: "'Syne', system-ui, sans-serif" }}>
+                ROOM
+              </span>
+            </Link>
+
+            <div className="flex items-center gap-2">
+              {/* Hamburger */}
+              <button
+                type="button"
+                aria-expanded={menuOpen}
+                aria-controls="mobile-nav"
+                aria-label={menuOpen ? "Close menu" : "Open menu"}
+                onClick={() => setMenuOpen((o) => !o)}
+                className="flex items-center justify-center transition-all duration-200"
+                style={{ color: "rgba(255,255,255,0.8)", background: "transparent", border: "none" }}
+              >
+                {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              </button>
+            </div>
+          </div>
         </div>
 
         {/* ── Mobile nav dropdown ───────────────────────────────── */}
@@ -438,16 +434,24 @@ export function Header({ hideJoin }: { hideJoin?: boolean }) {
                 </li>
               );
             })}
+            
             {isLoaded && !isSignedIn && (
-              <li className="mt-3 pt-3" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+              <li className="mt-2 pt-2 px-1" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
                 <Link
                   href="/sign-in"
                   onClick={() => setMenuOpen(false)}
-                  className="flex items-center justify-center w-full px-4 py-3 rounded-xl text-base font-medium transition-all duration-200"
+                  className="flex items-center justify-center w-full px-4 py-3.5 rounded-xl text-[0.95rem] font-medium transition-all duration-200"
                   style={{
                     fontFamily: "'Inter', sans-serif",
-                    border: "1.5px solid rgba(255,255,255,0.12)",
-                    color: "rgba(255,255,255,0.65)",
+                    background: "rgba(79,158,255,0.1)",
+                    border: "1px solid rgba(79,158,255,0.2)",
+                    color: "#ededed",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = "rgba(79,158,255,0.15)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = "rgba(79,158,255,0.1)";
                   }}
                 >
                   Sign in
@@ -456,10 +460,12 @@ export function Header({ hideJoin }: { hideJoin?: boolean }) {
             )}
             {isLoaded && isSignedIn && (
               <li
-                className="mt-3 pt-3 flex justify-center"
+                className="mt-2 pt-3 pb-1 flex justify-center"
                 style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}
               >
-                <UserButton appearance={{ elements: { userButtonAvatarBox: "w-10 h-10" } }} />
+                <div style={{ transform: "scale(1.1)" }}>
+                  <UserButton appearance={{ elements: { userButtonAvatarBox: "w-10 h-10 border border-white/10" } }} />
+                </div>
               </li>
             )}
           </ul>

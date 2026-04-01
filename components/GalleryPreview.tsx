@@ -79,11 +79,11 @@ export function GalleryPreview({ events }: { events: EventItem[] }) {
         <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-[#020202] to-transparent z-20 pointer-events-none" />
 
         {/* Row 1: Left to Right */}
-        <div className="overflow-hidden w-[200vw] flex" style={{ transform: "rotate(-2deg)" }}>
+        <div className="overflow-hidden flex w-[150vw] -ml-[25vw]" style={{ transform: "rotate(-2deg)" }}>
           <motion.div 
             animate={{ x: ["-50%", "0%"] }}
             transition={{ repeat: Infinity, ease: "linear", duration: 40 }}
-            className="flex gap-6 w-full"
+            className="flex gap-6 w-max will-change-transform"
           >
             {duplicatedTop.map((item, i) => (
               <GalleryImage key={`top-${i}`} src={item.src} eventTitle={item.eventTitle} index={i} />
@@ -92,11 +92,11 @@ export function GalleryPreview({ events }: { events: EventItem[] }) {
         </div>
 
         {/* Row 2: Right to Left */}
-        <div className="overflow-hidden w-[200vw] flex" style={{ transform: "rotate(-2deg)" }}>
+        <div className="overflow-hidden flex w-[150vw] -ml-[25vw]" style={{ transform: "rotate(-2deg)" }}>
           <motion.div 
             animate={{ x: ["0%", "-50%"] }}
             transition={{ repeat: Infinity, ease: "linear", duration: 35 }}
-            className="flex gap-6 w-full"
+            className="flex gap-6 w-max will-change-transform"
           >
             {duplicatedBottom.map((item, i) => (
               <GalleryImage key={`bottom-${i}`} src={item.src} eventTitle={item.eventTitle} index={i} />
