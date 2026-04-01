@@ -10,6 +10,7 @@ export const metadata: Metadata = {
   description: "Private dashboard for content management.",
   robots: "noindex, nofollow",
 };
+export const dynamic = "force-dynamic";
 
 export default async function AdminPage() {
   const user = await currentUser();

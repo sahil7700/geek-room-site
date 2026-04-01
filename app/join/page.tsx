@@ -6,6 +6,7 @@ export const metadata: Metadata = {
   title: "Join Us — GEEKROOM JIMSEMTC",
   description: "Join GEEKROOM JIMSEMTC. Recruitment form and membership info.",
 };
+export const dynamic = "force-dynamic";
 
 export default async function JoinPage() {
   const settings = await getSettings();

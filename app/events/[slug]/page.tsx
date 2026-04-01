@@ -17,6 +17,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description: event.description.substring(0, 160),
   };
 }
+export const dynamic = "force-dynamic";
 
 export default async function EventPage({ params }: Props) {
   const { slug } = await params;
