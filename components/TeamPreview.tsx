@@ -33,7 +33,7 @@ export function TeamPreview({ members }: { members: TeamMember[] }) {
         }}
       />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-12">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-16">
           <div>
@@ -393,7 +393,7 @@ function MemberModal({
                 lineHeight: 1.65,
               }}
             >
-              A builder and contributor within the Geek Room community at JEMTEC — working
+              A builder and contributor within the Geek Room community at JIMS EMTC — working
               on projects, events, and helping grow the tech culture on campus.
             </p>
           </div>

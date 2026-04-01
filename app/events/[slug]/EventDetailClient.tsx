@@ -381,7 +381,7 @@ export default function EventDetailClient({ event }: { event: EventDetails }) {
                     ) : (
                       <div className="text-center py-8">
                         <Trophy className="h-16 w-16 mx-auto mb-4 text-white/20" />
-                        <p className="text-white/60">A fantastic event brought to you by GeekRoom JEMTEC!</p>
+                        <p className="text-white/60">A fantastic event brought to you by GeekRoom JIMS EMTC!</p>
                       </div>
                     )}
                   </>

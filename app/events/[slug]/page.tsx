@@ -10,13 +10,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const customEvents = await getEvents();
   const event = customEvents.find((e: EventItem) => e.id === slug);
-  if (!event) return { title: "Event — GeekRoom JEMTEC" };
+  if (!event) return { title: "Event — GeekRoom JIMS EMTC" };
 
   return {
-    title: `\${event.title} — GeekRoom JEMTEC`,
+    title: `${event.title} — GeekRoom JIMS EMTC`,
     description: event.description.substring(0, 160),
   };
 }
+export const dynamic = "force-dynamic";
 
 export default async function EventPage({ params }: Props) {
   const { slug } = await params;

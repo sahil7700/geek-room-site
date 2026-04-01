@@ -4,7 +4,7 @@ import GalleryClient from "./GalleryClient";
 import { EventDetails } from "../events/data";
 
 export const metadata: Metadata = {
-  title: "Media Archive — GeekRoom JEMTEC",
+  title: "Media Archive — GeekRoom JIMS EMTC",
   description: "Explore photos and videos from all GeekRoom events",
 };
 

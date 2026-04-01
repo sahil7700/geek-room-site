@@ -9,6 +9,7 @@ interface FormField {
   id: string;
   label: string;
 }
+export const dynamic = "force-dynamic";
 
 export default async function EventResponsesPage({ params }: { params: Promise<{ eventId: string }> }) {
   const { eventId } = await params;

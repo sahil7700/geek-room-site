@@ -21,9 +21,9 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Geek Room — Student Tech Society at JEMTEC",
+  title: "Geek Room — Student Tech Society at JIMS EMTC",
   description:
-    "Geek Room is the builder-led student tech society at JEMTEC. We run hackathons, workshops, and events that turn curiosity into real-world skills.",
+    "Geek Room is the builder-led student tech society at JIMS EMTC. We run hackathons, workshops, and events that turn curiosity into real-world skills.",
 };
 
 export const viewport: Viewport = {

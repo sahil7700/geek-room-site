@@ -16,7 +16,7 @@ export function HeroSection({ eventsCount, membersCount }: { eventsCount?: numbe
   const METRICS = [
     { icon: Calendar, value: eventsCount != null ? `${eventsCount}+` : "6+", label: "Signature Events" },
     { icon: Users, value: membersCount != null ? `${membersCount}+` : "100+", label: "Active Members" },
-    { icon: MapPin, value: "JEMTEC", label: "Campus, Greater Noida" },
+    { icon: MapPin, value: "JIMS EMTC", label: "Campus, Greater Noida" },
   ];
 
   return (
@@ -77,7 +77,7 @@ export function HeroSection({ eventsCount, membersCount }: { eventsCount?: numbe
                 className="text-xs font-medium tracking-[0.2em] uppercase"
                 style={{ color: "#4F9EFF", fontFamily: "'Inter', sans-serif" }}
               >
-                GEEKROOM — JEMTEC
+                GEEKROOM — JIMS EMTC
               </span>
             </motion.div>
 
@@ -90,7 +90,7 @@ export function HeroSection({ eventsCount, membersCount }: { eventsCount?: numbe
               style={{
                 fontFamily: "'Syne', system-ui, sans-serif",
                 fontWeight: 800,
-                fontSize: "clamp(2.8rem, 6vw, 5rem)",
+                fontSize: "clamp(2rem, 7vw, 5rem)",
                 color: "#ededed",
                 letterSpacing: "-0.02em",
               }}
@@ -130,7 +130,7 @@ export function HeroSection({ eventsCount, membersCount }: { eventsCount?: numbe
                 fontWeight: 400,
               }}
             >
-              Geek Room is a builder-led student tech community at JEMTEC. We run hackathons,
+              Geek Room is a builder-led student tech community at JIMS EMTC. We run hackathons,
               workshops, and events that turn curiosity into real-world skills.
             </motion.p>
 
@@ -139,7 +139,7 @@ export function HeroSection({ eventsCount, membersCount }: { eventsCount?: numbe
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.5 }}
-              className="flex flex-wrap gap-4 mb-16"
+              className="flex flex-wrap gap-3 mb-16"
             >
               <Link
                 id="hero-cta-primary"

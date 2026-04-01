@@ -58,7 +58,7 @@ export function WhySection() {
         }}
       />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-12">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
         {/* Section Label */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
@@ -112,7 +112,7 @@ export function WhySection() {
                 fontWeight: 400,
               }}
             >
-              Geek Room is where JEMTEC students with ambition find their people, sharpen their
+              Geek Room is where JIMS EMTC students with ambition find their people, sharpen their
               craft, and build things they&apos;re proud of.
             </motion.p>
 

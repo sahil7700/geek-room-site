@@ -9,13 +9,21 @@ export const metadata: Metadata = {
   description: "Learn about the GEEKROOM tech society.",
 };
 
-export default function AboutPage() {
+export const dynamic = "force-dynamic";
+
+import { getMembers } from "@/app/actions/teamActions";
+import { getEvents } from "@/app/actions/eventActions";
+
+export default async function AboutPage() {
+  const members = await getMembers();
+  const events = await getEvents();
+
   return (
     <main className="relative min-h-screen bg-[#050505] text-[#ededed] overflow-hidden selection:bg-[#00F2FF]/30">
       <DynamicBackground />
       
       <div className="relative z-10 w-full overflow-hidden">
-        <AboutHero />
+        <AboutHero membersCount={members.length} eventsCount={events.length} />
         <AboutStory />
         <NetworkNodes />
       </div>

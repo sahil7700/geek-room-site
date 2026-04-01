@@ -49,7 +49,7 @@ export function JoinCTA() {
         </span>
       </div>
 
-      <div className="relative z-10 max-w-4xl mx-auto px-6 lg:px-12 text-center">
+      <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-12 text-center">
         {/* Label */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
@@ -184,7 +184,7 @@ export function JoinCTA() {
             color: "rgba(255,255,255,0.22)",
           }}
         >
-          Open to all JEMTEC students · Free to join
+          Open to all JIMS EMTC students · Free to join
         </motion.p>
       </div>
     </section>

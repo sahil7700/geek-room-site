@@ -23,7 +23,7 @@ import gsap from "gsap";
 //  Text → #FFFFFF / #ededed
 // ─────────────────────────────────────────────────────────────────────────────
 
-export function AboutHero() {
+export function AboutHero({ membersCount, eventsCount }: { membersCount?: number; eventsCount?: number }) {
   const container = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -80,11 +80,11 @@ export function AboutHero() {
 
           {/* Heading — Akira Expanded */}
           <h1 className="tracking-tighter leading-[0.9] mb-6" style={{ fontFamily: "'Akira Expanded', sans-serif" }}>
-            <span className="hero-line block text-[clamp(3rem,8vw,6rem)] text-transparent bg-clip-text bg-gradient-to-b from-white to-white/50">
+            <span className="hero-line block text-[clamp(2.5rem,8vw,6rem)] text-transparent bg-clip-text bg-gradient-to-b from-white to-white/50">
               WE ARE
             </span>
             <span
-              className="hero-line block text-[clamp(3rem,8vw,6rem)] text-[#4F9EFF]"
+              className="hero-line block text-[clamp(2.5rem,8vw,6rem)] text-[#4F9EFF]"
               style={{ textShadow: "0 0 40px rgba(79,158,255,0.4)" }}
             >
               GEEKROOM
@@ -102,8 +102,8 @@ export function AboutHero() {
           {/* Stats */}
           <div className="hero-sub flex items-center gap-8">
             {[
-              { val: "200+", lbl: "Members" },
-              { val: "50+", lbl: "Events" },
+              { val: membersCount != null ? `${membersCount}+` : "200+", lbl: "Members" },
+              { val: eventsCount != null ? `${eventsCount}+` : "50+", lbl: "Events" },
               { val: "5+", lbl: "Years" },
             ].map((s) => (
               <div key={s.lbl} className="flex flex-col">
@@ -138,7 +138,7 @@ export function AboutHero() {
 
         {/* ── RIGHT: Logo widget ── */}
         <div className="flex items-center justify-center">
-          <div className="relative" style={{ width: SIZE, height: SIZE }}>
+          <div className="relative transform scale-[0.7] sm:scale-90 md:scale-100 origin-center" style={{ width: SIZE, height: SIZE }}>
 
             {/* Grid overlay */}
             <div

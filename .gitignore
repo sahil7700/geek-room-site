@@ -52,7 +52,7 @@ MEMORY.md
 # These folders are for reference only and should not be copied to the repo:
 # geek veek, geek veek 2.0, hackquanta, hackforce, aptiverse, BlockGen
 # Images are located in public/images/events/
-=======
+
 # clerk configuration (can include secrets)
 /.clerk/
->>>>>>> main
+.env*.local

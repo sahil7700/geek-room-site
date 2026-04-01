@@ -11,6 +11,7 @@ interface FormField {
   accept?: string;
   options?: string[];
 }
+export const dynamic = "force-dynamic";
 
 export default async function RegisterEventPage({ params }: { params: Promise<{ eventId: string }> }) {
   const { eventId } = await params;

@@ -19,8 +19,8 @@ const geistMono = Geist_Mono({
 const inter = Inter({ subsets: ["latin"], weight: ["300", "400", "500", "600", "700"], variable: "--font-inter" });
 
 export const metadata: Metadata = {
-  title: "Events — GeekRoom JEMTEC",
-  description: "Upcoming and past events by GeekRoom JEMTEC.",
+  title: "Events — GeekRoom JIMS EMTC",
+  description: "Upcoming and past events by GeekRoom JIMS EMTC.",
 };
 
 export const dynamic = "force-dynamic";
