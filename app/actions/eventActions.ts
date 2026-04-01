@@ -24,6 +24,7 @@ export type EventItem = {
   registrationOpen?: boolean;
   gallery?: string[];
   winners?: Winner[];
+  hasFormFields?: boolean;
 };
 
 export async function addEvent(eventData: EventItem) {
@@ -159,7 +160,7 @@ export async function getEvents(): Promise<EventItem[]> {
     }
 
     const rawEvents = await prisma.event.findMany({
-      include: { winners: true },
+      include: { winners: true, _count: { select: { formFields: true } } },
       orderBy: { date: "asc" }
     });
 
@@ -186,6 +187,7 @@ export async function getEvents(): Promise<EventItem[]> {
         category: e.category || undefined,
         time: e.time || undefined,
         registrationLink: e.registrationLink || undefined,
+        hasFormFields: (e._count as any)?.formFields > 0,
         winners: e.winners.map((w: any) => ({
           rank: w.rank,
           teamName: w.teamName,
@@ -208,5 +210,45 @@ export async function getEvents(): Promise<EventItem[]> {
   } catch (error: any) {
     console.error("Failed to fetch events", error);
     return [];
+  }
+}
+
+export async function getEventById(id: string): Promise<EventItem | null> {
+  try {
+    if (!process.env.DATABASE_URL) return null;
+
+    const event = await prisma.event.findUnique({
+      where: { id },
+      include: { winners: true, _count: { select: { formFields: true } } },
+    });
+
+    if (!event) return null;
+
+    let status = event.status as "upcoming" | "past";
+    const todayDate = new Date();
+    todayDate.setHours(0, 0, 0, 0);
+    if (status === "upcoming" && event.date < todayDate) {
+      status = "past";
+      prisma.event.update({ where: { id }, data: { status: "past" } }).catch(console.error);
+    }
+
+    return {
+      ...event,
+      date: event.date.toISOString().split("T")[0] || event.date.toISOString(),
+      status,
+      category: event.category || undefined,
+      time: event.time || undefined,
+      registrationLink: event.registrationLink || undefined,
+      hasFormFields: (event._count as any)?.formFields > 0,
+      winners: event.winners.map((w: any) => ({
+        rank: w.rank,
+        teamName: w.teamName,
+        members: w.members,
+        photo: w.photo || undefined,
+      })),
+    };
+  } catch (error: any) {
+    console.error("Failed to fetch event:", error);
+    return null;
   }
 }

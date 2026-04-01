@@ -2,12 +2,14 @@
 
 import { useState } from "react";
 import { updateEvent, EventItem } from "@/app/actions/eventActions";
+import { saveFormFields, FormFieldWithId } from "@/app/actions/formActions";
 import { useRouter } from "next/navigation";
 import { Plus, Trash2, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import ImageUpload from "@/components/ImageUpload";
+import FormBuilder, { FieldDefinition } from "@/components/FormBuilder";
 
-export default function EditEventForm({ initialEvent }: { initialEvent: EventItem }) {
+export default function EditEventForm({ initialEvent, initialFormFields }: { initialEvent: EventItem; initialFormFields: FormFieldWithId[] }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -26,6 +28,14 @@ export default function EditEventForm({ initialEvent }: { initialEvent: EventIte
           members: w.members?.join(", ") || ""
         }))
       : [{ rank: "1st", teamName: "", members: "", photo: "" }]
+  );
+  const [formFields, setFormFields] = useState<FieldDefinition[]>(
+    initialFormFields.map(f => ({
+      label: f.label,
+      type: f.type,
+      required: f.required,
+      options: f.options || [],
+    }))
   );
 
   function handleWinnerChange(index: number, field: string, value: string) {
@@ -79,6 +89,20 @@ export default function EditEventForm({ initialEvent }: { initialEvent: EventIte
     const result = await updateEvent(initialEvent.id, eventData);
 
     if (result.success) {
+      // Save form fields
+      if (status === "upcoming" && formFields.length > 0) {
+        const validFields = formFields.filter(f => f.label.trim() !== "");
+        await saveFormFields(initialEvent.id, validFields.map((f, i) => ({
+          label: f.label.trim(),
+          type: f.type,
+          required: f.required,
+          options: f.options.filter(o => o.trim() !== ""),
+          order: i,
+        })));
+      } else {
+        // Clear form fields if event is past or workshop
+        await saveFormFields(initialEvent.id, []);
+      }
       router.push("/admin/events");
       router.refresh();
     } else {
@@ -185,6 +209,12 @@ export default function EditEventForm({ initialEvent }: { initialEvent: EventIte
               <label htmlFor="registrationOpen" className="font-medium text-zinc-200 cursor-pointer">
                 Registration Open
               </label>
+            </div>
+          )}
+
+          {status === "upcoming" && category !== "workshop" && (
+            <div className="bg-zinc-800/30 p-6 rounded-lg border border-zinc-700/50">
+              <FormBuilder fields={formFields} onChange={setFormFields} />
             </div>
           )}
 

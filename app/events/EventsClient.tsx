@@ -274,7 +274,7 @@ export default function EventsClient({ events }: { events: EventDetails[] }) {
                 <Search className="w-6 h-6 text-gray-500" />
               </div>
               <p className="text-lg text-white font-medium">No events found</p>
-              <p className="text-sm text-gray-500 mt-1 max-w-sm">Try adjusting your filters or search terms to find what you're looking for.</p>
+              <p className="text-sm text-gray-500 mt-1 max-w-sm">Try adjusting your filters or search terms to find what you&apos;re looking for.</p>
             </motion.div>
           ) : (
             <motion.div

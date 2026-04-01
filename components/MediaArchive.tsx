@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { Film, Image } from "lucide-react";
 
@@ -9,15 +9,11 @@ interface MediaArchiveProps {
 }
 
 export default function MediaArchive({ images }: MediaArchiveProps) {
-  const [duplicatedImages, setDuplicatedImages] = useState<string[]>([]);
   const [isHovered, setIsHovered] = useState(false);
-
-  // Duplicate images to create seamless loop
-  useEffect(() => {
-    if (images.length === 0) return;
-    // Duplicate enough times to fill the screen and create smooth loop
-    const dupes = [...images, ...images, ...images, ...images];
-    setDuplicatedImages(dupes);
+  
+  const duplicatedImages = useMemo(() => {
+    if (images.length === 0) return [];
+    return [...images, ...images, ...images, ...images];
   }, [images]);
 
   const scrollRef = useRef<HTMLDivElement>(null);

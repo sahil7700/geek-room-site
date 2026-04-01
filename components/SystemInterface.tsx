@@ -40,11 +40,7 @@ export function SystemInterface() {
     }, typingSpeed);
 
     return () => clearTimeout(timeout);
-  }, [text, isDeleting, phraseIndex]);
-
-  useEffect(() => {
-    setText("> ");
-  }, []);
+  }, [text, isDeleting, phraseIndex, phrases]);
 
   const panels = [
     { title: "BUILD", icon: <Terminal className="w-6 h-6" />, desc: "Shipping real-world projects" },

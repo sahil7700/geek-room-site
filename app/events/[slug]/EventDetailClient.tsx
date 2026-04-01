@@ -395,7 +395,7 @@ export default function EventDetailClient({ event }: { event: EventDetails }) {
                     </div>
 
                     <p className="text-white/60 mb-8">
-                      Secure your spot! Limited seats available. Don't miss this opportunity to learn, network, and grow.
+                      Secure your spot! Limited seats available. Don&apos;t miss this opportunity to learn, network, and grow.
                     </p>
 
                     {event.registrationOpen === false ? (

@@ -113,7 +113,7 @@ export function WhySection() {
               }}
             >
               Geek Room is where JEMTEC students with ambition find their people, sharpen their
-              craft, and build things they're proud of.
+              craft, and build things they&apos;re proud of.
             </motion.p>
 
             {/* Decorative quote line */}
@@ -134,7 +134,7 @@ export function WhySection() {
                   fontWeight: 500,
                 }}
               >
-                "The best way to learn tech is to build something that matters."
+                &quot;The best way to learn tech is to build something that matters.&quot;
               </p>
             </motion.div>
           </div>

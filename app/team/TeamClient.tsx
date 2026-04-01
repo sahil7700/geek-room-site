@@ -151,8 +151,9 @@ export default function TeamClient({ members, loggedInEmail }: TeamClientProps) 
     });
 
     // Smooth scroll for anchor links
-    const smoothScroll = function (this: HTMLAnchorElement, e: Event) {
-      const href = this.getAttribute("href");
+    const smoothScroll = function (e: Event) {
+      const target = e.currentTarget as HTMLAnchorElement;
+      const href = target.getAttribute("href");
       if (href && href.startsWith("#")) {
         e.preventDefault();
         document.querySelector(href)?.scrollIntoView({ behavior: "smooth", block: "start" });

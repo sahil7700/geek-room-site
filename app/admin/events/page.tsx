@@ -1,6 +1,6 @@
 import { getEvents } from "@/app/actions/eventActions";
 import Link from "next/link";
-import { Edit2, Plus, Calendar } from "lucide-react";
+import { Edit2, Plus, Calendar, FileText } from "lucide-react";
 import DeleteEventButton from "./DeleteEventButton";
 
 export const dynamic = "force-dynamic";
@@ -51,21 +51,24 @@ export default async function AdminEventsPage() {
                     </div>
                   </div>
                 </div>
-                <div className="flex items-center gap-4">
-                  <div className="text-sm">
-                    {event.registrationOpen !== false ? (
-                      <span className="text-green-400 bg-green-400/10 px-2 py-1 rounded">Reg Open</span>
-                    ) : (
-                      <span className="text-orange-400 bg-orange-400/10 px-2 py-1 rounded">Reg Closed</span>
-                    )}
+                  <div className="flex items-center gap-4">
+                    <div className="text-sm">
+                      {event.registrationOpen !== false ? (
+                        <span className="text-green-400 bg-green-400/10 px-2 py-1 rounded">Reg Open</span>
+                      ) : (
+                        <span className="text-orange-400 bg-orange-400/10 px-2 py-1 rounded">Reg Closed</span>
+                      )}
+                    </div>
+                    <div className="flex gap-2">
+                      <Link href={`/admin/events/${event.id}/submissions`} className="p-2 bg-zinc-800 hover:bg-zinc-700 rounded-lg transition" title="View Submissions">
+                        <FileText className="w-4 h-4 text-zinc-300" />
+                      </Link>
+                      <Link href={`/admin/edit-event/${event.id}`} className="p-2 bg-zinc-800 hover:bg-zinc-700 rounded-lg transition" title="Edit Event">
+                        <Edit2 className="w-4 h-4 text-zinc-300" />
+                      </Link>
+                      <DeleteEventButton eventId={event.id} />
+                    </div>
                   </div>
-                  <div className="flex gap-2">
-                    <Link href={`/admin/edit-event/${event.id}`} className="p-2 bg-zinc-800 hover:bg-zinc-700 rounded-lg transition" title="Edit Event">
-                      <Edit2 className="w-4 h-4 text-zinc-300" />
-                    </Link>
-                    <DeleteEventButton eventId={event.id} />
-                  </div>
-                </div>
               </div>
             )) : (
               <p className="text-zinc-500">No upcoming events.</p>
@@ -92,22 +95,25 @@ export default async function AdminEventsPage() {
                     </div>
                   </div>
                 </div>
-                <div className="flex items-center gap-4">
-                  <div className="text-sm flex gap-2">
-                    {event.gallery && event.gallery.length > 0 && (
-                      <span className="text-purple-400 bg-purple-400/10 px-2 py-1 rounded">{event.gallery.length} Images</span>
-                    )}
-                    {event.winners && event.winners.length > 0 && (
-                      <span className="text-yellow-400 bg-yellow-400/10 px-2 py-1 rounded">{event.winners.length} Winners</span>
-                    )}
+                  <div className="flex items-center gap-4">
+                    <div className="text-sm flex gap-2">
+                      {event.gallery && event.gallery.length > 0 && (
+                        <span className="text-purple-400 bg-purple-400/10 px-2 py-1 rounded">{event.gallery.length} Images</span>
+                      )}
+                      {event.winners && event.winners.length > 0 && (
+                        <span className="text-yellow-400 bg-yellow-400/10 px-2 py-1 rounded">{event.winners.length} Winners</span>
+                      )}
+                    </div>
+                    <div className="flex gap-2">
+                      <Link href={`/admin/events/${event.id}/submissions`} className="p-2 bg-zinc-800 hover:bg-zinc-700 rounded-lg transition" title="View Submissions">
+                        <FileText className="w-4 h-4 text-zinc-300" />
+                      </Link>
+                      <Link href={`/admin/edit-event/${event.id}`} className="p-2 bg-zinc-800 hover:bg-zinc-700 rounded-lg transition" title="Edit Event">
+                        <Edit2 className="w-4 h-4 text-zinc-300" />
+                      </Link>
+                      <DeleteEventButton eventId={event.id} />
+                    </div>
                   </div>
-                  <div className="flex gap-2">
-                    <Link href={`/admin/edit-event/${event.id}`} className="p-2 bg-zinc-800 hover:bg-zinc-700 rounded-lg transition" title="Edit Event">
-                      <Edit2 className="w-4 h-4 text-zinc-300" />
-                    </Link>
-                    <DeleteEventButton eventId={event.id} />
-                  </div>
-                </div>
               </div>
             )) : (
               <p className="text-zinc-500">No past events.</p>

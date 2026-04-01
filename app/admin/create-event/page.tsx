@@ -2,10 +2,12 @@
 
 import { useState } from "react";
 import { addEvent } from "@/app/actions/eventActions";
+import { saveFormFields } from "@/app/actions/formActions";
 import { useRouter } from "next/navigation";
 import { Plus, Trash2, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import ImageUpload from "@/components/ImageUpload";
+import FormBuilder, { FieldDefinition } from "@/components/FormBuilder";
 
 export default function CreateEventPage() {
   const router = useRouter();
@@ -19,6 +21,7 @@ export default function CreateEventPage() {
   const [galleryUrls, setGalleryUrls] = useState<string[]>([]);
 
   const [winners, setWinners] = useState([{ rank: "1st", teamName: "", members: "", photo: "" }]);
+  const [formFields, setFormFields] = useState<FieldDefinition[]>([]);
 
   function handleWinnerChange(index: number, field: string, value: string) {
     const newWinners = [...winners];
@@ -77,6 +80,19 @@ export default function CreateEventPage() {
     const result = await addEvent(newEvent);
 
     if (result.success) {
+      // Save form fields if any were defined
+      if (status === "upcoming" && formFields.length > 0) {
+        const validFields = formFields.filter(f => f.label.trim() !== "");
+        if (validFields.length > 0) {
+          await saveFormFields(id, validFields.map((f, i) => ({
+            label: f.label.trim(),
+            type: f.type,
+            required: f.required,
+            options: f.options.filter(o => o.trim() !== ""),
+            order: i,
+          })));
+        }
+      }
       router.push("/admin/events");
       router.refresh(); // to ensure the new list shows up
     } else {
@@ -184,6 +200,12 @@ export default function CreateEventPage() {
               <label htmlFor="registrationOpen" className="font-medium text-zinc-200 cursor-pointer">
                 Registration Open
               </label>
+            </div>
+          )}
+
+          {status === "upcoming" && category !== "workshop" && (
+            <div className="bg-zinc-800/30 p-6 rounded-lg border border-zinc-700/50">
+              <FormBuilder fields={formFields} onChange={setFormFields} />
             </div>
           )}
 

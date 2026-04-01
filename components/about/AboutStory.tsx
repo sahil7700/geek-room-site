@@ -52,7 +52,7 @@ export function AboutStory() {
               </span>
             </p>
             <p className="text-[#ededed]/35 text-sm mt-3 font-mono">
-              Building what's next — one commit at a time.
+              Building what&apos;s next — one commit at a time.
             </p>
           </div>
         </div>
