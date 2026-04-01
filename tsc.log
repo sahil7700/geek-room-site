@@ -1,4 +1,0 @@
-app/actions/eventActions.ts(178,32): error TS7006: Parameter 'w' implicitly has an 'any' type.
-lib/prisma.ts(1,30): error TS2307: Cannot find module '@prisma/client' or its corresponding type declarations.
-scripts/checkBuckets.ts(1,30): error TS2307: Cannot find module '@prisma/client' or its corresponding type declarations.
-scripts/migrateData.ts(1,30): error TS2307: Cannot find module '@prisma/client' or its corresponding type declarations.
