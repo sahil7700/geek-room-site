@@ -3,9 +3,7 @@ import { Syne, Inter } from "next/font/google";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { ClerkProvider } from "@clerk/nextjs";
-import { currentUser, clerkClient } from "@clerk/nextjs/server";
 import { dark } from "@clerk/themes";
-import { prisma } from "@/lib/prisma";
 import { getSettings } from "@/app/actions/settings";
 import { UnifiedBackground } from "@/components/UnifiedBackground";
 import "./globals.css";
@@ -43,23 +41,6 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const settings = await getSettings();
-
-  // Auto-assign member role on login based on TeamMember table
-  const user = await currentUser();
-  if (user) {
-    const role = user.publicMetadata?.role;
-    const email = user.emailAddresses?.[0]?.emailAddress;
-    
-    if (!role && email) {
-      const isMember = await prisma.teamMember.findFirst({ where: { gmail: email } });
-      if (isMember) {
-        const client = await clerkClient();
-        await client.users.updateUserMetadata(user.id, {
-          publicMetadata: { role: "member" }
-        });
-      }
-    }
-  }
 
   return (
     <ClerkProvider appearance={{

@@ -40,6 +40,20 @@ export function Header({ hideJoin }: { hideJoin?: boolean }) {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // Background explicitly securely syncing Member assigned role if missed during layout.
+  useEffect(() => {
+    if (isLoaded && isSignedIn && !role && email) {
+      import('@/app/actions/syncRoleAction').then((m) => {
+        m.syncUserRole().then((res) => {
+          if (res.updated) {
+            // Force reload to get the new Clerk JWT session payload!
+            window.location.reload();
+          }
+        });
+      }).catch(console.error);
+    }
+  }, [isLoaded, isSignedIn, role, email]);
+
   /* ── shared capsule style builder ─────────────────────────── */
   const capsuleBase: React.CSSProperties = {
     alignItems: "center",

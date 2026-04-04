@@ -2,6 +2,7 @@
 
 import { clerkClient, currentUser } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
+import { prisma } from "@/lib/prisma";
 
 export type UserRole = "admin" | "member" | "owner" | null;
 
@@ -79,6 +80,19 @@ export async function updateUserRole(targetUserId: string, newRole: UserRole) {
   try {
     const client = await clerkClient();
     
+    if (newRole === "member") {
+      const targetUser = await client.users.getUser(targetUserId);
+      const email = targetUser.emailAddresses[0]?.emailAddress;
+      if (!email) throw new Error("User has no email address.");
+
+      const isTeamMember = await prisma.teamMember.findFirst({
+        where: { gmail: email }
+      });
+      if (!isTeamMember) {
+        throw new Error("Cannot assign 'member' role. This user's email is not registered in the Team Database.");
+      }
+    }
+
     await client.users.updateUserMetadata(targetUserId, {
       publicMetadata: {
         role: newRole
