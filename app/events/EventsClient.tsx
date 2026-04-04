@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 import ScrambleText from "@/components/ScrambleText";
 import MinimalEventCard from "@/components/MinimalEventCard";
-import LunarRunwayBackground from "@/components/LunarRunwayBackground";
+
 // Utility formatting
 const formatEventDate = (dateStr: string) => {
   const date = new Date(dateStr);
@@ -87,7 +87,7 @@ export default function EventsClient({ events }: { events: EventDetails[] }) {
 
   return (
     <div className="relative mt-8 sm:mt-12 w-full font-['var(--font-inter)']">
-      <LunarRunwayBackground />
+
 
       {/* ============== HERO / FEATURED SECTION ============== */}
       <div className="relative z-10 flex flex-col items-center mb-16" ref={featuredRef}>

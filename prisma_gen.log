@@ -1,8 +1,0 @@
-Environment variables loaded from .env
-Prisma schema loaded from prisma\schema.prisma
-Error: 
-Cannot find module 'C:\Users\ADTS\Downloads\geek-room-site\node_modules\@prisma\client\runtime\query_engine_bg.postgresql.wasm-base64.js'
-Require stack:
-- C:\Users\ADTS\Downloads\geek-room-site\node_modules\prisma\build\index.js
-
-

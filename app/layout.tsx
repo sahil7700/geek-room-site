@@ -4,6 +4,7 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { ClerkProvider } from "@clerk/nextjs";
 import { getSettings } from "@/app/actions/settings";
+import { UnifiedBackground } from "@/components/UnifiedBackground";
 import "./globals.css";
 
 const syne = Syne({
@@ -45,11 +46,19 @@ export default async function RootLayout({
       <html lang="en">
         <body
           className={`${syne.variable} ${inter.variable} flex min-h-screen flex-col antialiased`}
-          style={{ backgroundColor: "#050505", color: "#ededed" }}
         >
-          <Header hideJoin={settings.hideJoin} />
-          <div className="flex-1">{children}</div>
-          <Footer hideJoin={settings.hideJoin} />
+          {/* Unified background — sits at z-index: -1, behind the whole page */}
+          <UnifiedBackground />
+
+          {/* Main layout — no explicit stacking context here */}
+          <div
+            className="flex flex-col min-h-screen w-full relative"
+            style={{ borderTop: "1px solid rgba(0,200,255,0.15)" }}
+          >
+            <Header hideJoin={settings.hideJoin} />
+            <div className="flex-1">{children}</div>
+            <Footer hideJoin={settings.hideJoin} />
+          </div>
         </body>
       </html>
     </ClerkProvider>

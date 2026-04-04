@@ -1,6 +1,6 @@
 "use client";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import Robot3DBackground from "./Robot3DBackground";
+
 
 type TeamMember = {
   id: number;
@@ -124,7 +124,7 @@ export default function TeamClient({ members, loggedInEmail }: TeamClientProps) 
     <div className="kin-team-page">
       <style dangerouslySetInnerHTML={{
         __html: `
-        .kin-team-page { --primary-bg: #050505; --secondary-bg: #111111; --card-bg: rgba(21,21,21,0.85); --accent-purple: #00F2FF; --accent-pink: #FF8C00; --accent-blue: #00F2FF; --accent-cyan: #00F2FF; --accent-orange: #FF8C00; --accent-green: #00F2FF; --text-primary: #ededed; --text-secondary: #a1a1aa; --text-muted: #71717a; --border-color: rgba(255, 255, 255, 0.1); --gradient-1: linear-gradient(135deg, #00F2FF 0%, #FF8C00 100%); --gradient-2: linear-gradient(135deg, #FF8C00 0%, #00F2FF 100%); --gradient-3: linear-gradient(135deg, #00F2FF 0%, #00F2FF 100%); --gradient-4: linear-gradient(135deg, #FF8C00 0%, #FF8C00 100%); font-family: var(--font-geist-sans), system-ui, sans-serif; background-color: transparent; color: var(--text-primary); line-height: 1.6; overflow-x: hidden; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+        .kin-team-page { --primary-bg: #080a0f; --secondary-bg: #111111; --card-bg: rgba(21,21,21,0.85); --accent-purple: #00c8ff; --accent-pink: #ff8c00; --accent-blue: #00c8ff; --accent-cyan: #00c8ff; --accent-orange: #ff8c00; --accent-green: #00c8ff; --text-primary: #ededed; --text-secondary: #a1a1aa; --text-muted: #71717a; --border-color: rgba(255, 255, 255, 0.1); --gradient-1: linear-gradient(135deg, #00c8ff 0%, #ff8c00 100%); --gradient-2: linear-gradient(135deg, #ff8c00 0%, #00c8ff 100%); --gradient-3: linear-gradient(135deg, #00c8ff 0%, #00c8ff 100%); --gradient-4: linear-gradient(135deg, #ff8c00 0%, #ff8c00 100%); font-family: var(--font-geist-sans), system-ui, sans-serif; background-color: transparent; color: var(--text-primary); line-height: 1.6; overflow-x: hidden; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
         /* Removed Navbar CSS */
         .team-hero { min-height: 100vh; display: flex; align-items: center; justify-content: center; position: relative; padding: 10rem 4rem 6rem; text-align: center; overflow: hidden; }
         .hero-bg { position: absolute; top: 0; left: 0; right: 0; bottom: 0; z-index: -1; }
@@ -142,7 +142,7 @@ export default function TeamClient({ members, loggedInEmail }: TeamClientProps) 
             position: sticky;
             top: 0;
             min-height: 100vh;
-            background-color: rgba(5, 5, 5, 0.78);
+            background-color: rgba(8, 10, 15, 0.75);
             z-index: 10;
             box-shadow: 0 -15px 40px rgba(0,0,0,0.5);
             display: flex;
@@ -208,7 +208,6 @@ export default function TeamClient({ members, loggedInEmail }: TeamClientProps) 
         @media (max-width: 576px) { .team-hero { padding: 8rem 1.5rem 4rem; } .team-section, .values-section, .join-section { padding: 4rem 1.5rem; } .team-grid { grid-template-columns: 1fr; max-width: 350px; margin: 0 auto; } .join-actions { flex-direction: column; align-items: center; } .join-actions .btn { width: 100%; max-width: 280px; justify-content: center; } .footer { padding: 3rem 1.5rem; } .footer-links { flex-wrap: wrap; justify-content: center; gap: 1rem; } }
       `}} />
 
-      <Robot3DBackground />
 
       <section className="team-hero">
         <div className="hero-bg">
@@ -217,18 +216,18 @@ export default function TeamClient({ members, loggedInEmail }: TeamClientProps) 
           <div className="hero-gradient-3"></div>
         </div>
         <div className="hero-content">
-          <div className="relative inline-block mb-8 text-center w-full">
+          <div className="relative inline-flex flex-col items-center justify-center mb-8 text-center w-full max-w-[90vw] mx-auto">
             <h1
-              className="text-4xl md:text-6xl lg:text-7xl font-black tracking-tight"
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight flex items-center justify-center whitespace-nowrap"
               style={{ fontFamily: "'Syne', system-ui, sans-serif" }}
             >
-              <span className="text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.1)]">
-                <span className="text-[#00F2FF] opacity-80 mr-3">{'<'}</span>
-                THE OG TEAM
-                <span className="text-[#8C52FF] opacity-80 ml-3">{'/>'}</span>
+              <span className="text-white drop-shadow-[0_0_20px_rgba(255,255,255,0.15)] flex items-center gap-2 sm:gap-4">
+                <span className="text-[#00c8ff] opacity-90">{'<'}</span>
+                <span>THE OG TEAM</span>
+                <span className="text-[#7f77dd] opacity-90">{'/>'}</span>
               </span>
             </h1>
-            <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-64 h-px bg-gradient-to-r from-transparent via-[#00F2FF] to-transparent" />
+            <div className="absolute -bottom-6 w-full max-w-sm h-px bg-gradient-to-r from-transparent via-[#00c8ff] to-transparent opacity-50" />
           </div>
           <div className={`hero-dynamic-quote ${isQuoteFading ? 'fading' : ''}`}>
             {heroQuotes[heroQuoteIndex]}

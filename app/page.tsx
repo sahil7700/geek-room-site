@@ -26,12 +26,10 @@ export default async function Home() {
   const previewEvents = pastEvents.length > 0 ? pastEvents : events;
 
   return (
-    <main style={{ backgroundColor: "#050505", minHeight: "100vh", color: "#ededed" }}>
-      {/* 0. Startup Screen */}
+    <main className="min-h-screen">
+      {/* 0. Startup Screen (Plays once per browser session) */}
       <StartupAnimation />
 
-      {/* 0.1 Logo Animation */}
-      <HeroLogoAnimation />
       {/* 1. Hero */}
       <HeroSection eventsCount={events.length} membersCount={members.length} />
 

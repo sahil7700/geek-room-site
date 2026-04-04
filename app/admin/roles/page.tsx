@@ -31,7 +31,7 @@ export default async function RolesManagementPage() {
   const unassigned = allUsers.filter(u => !u.role);
 
   return (
-    <main className="min-h-screen bg-black text-white pt-32 pb-12 px-4 sm:px-6 lg:px-8">
+    <main className="min-h-screen text-white pt-32 pb-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-5xl mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-6">
           <div>

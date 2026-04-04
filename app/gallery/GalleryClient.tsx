@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Image as ImageIcon, Film, X, ChevronLeft, ChevronRight, Search, Download, Calendar, MapPin, FolderOpen, Share2, Layers, Check } from "lucide-react";
 import Image from "next/image";
 import { EventDetails } from "../events/data";
-import LunarRunwayBackground from "@/components/LunarRunwayBackground";
+
 import CustomCursor from "./CustomCursor";
 import FlipCounter from "./FlipCounter";
 
@@ -180,9 +180,7 @@ export default function GalleryClient({ events }: GalleryClientProps) {
   };
 
   return (
-    <main className="min-h-screen bg-[#1F1F2B] text-[#ededed] relative overflow-hidden cursor-none">
-      {/* === Lunar Runway Background === */}
-      <LunarRunwayBackground />
+    <main className="min-h-screen text-[#ededed] relative overflow-hidden cursor-none">
 
       {/* === ADDON: Magnetic Custom Cursor === */}
       <CustomCursor />

@@ -88,7 +88,7 @@ export default function EditEventForm({ initialEvent }: { initialEvent: EventIte
   }
 
   return (
-    <main className="min-h-screen bg-black text-white pt-32 pb-12 px-4 sm:px-6 lg:px-8">
+    <main className="min-h-screen text-white pt-32 pb-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto">
         <Link 
           href="/admin/events" 

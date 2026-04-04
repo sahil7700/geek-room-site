@@ -32,7 +32,7 @@ export default async function EditMemberPage({ params }: { params: Promise<{ id:
 
 
   return (
-    <main className="min-h-screen bg-black text-white pt-32 pb-12 px-4 sm:px-6 lg:px-8">
+    <main className="min-h-screen text-white pt-32 pb-12 px-4 sm:px-6 lg:px-8">
       <EditMemberForm member={member} isAdmin={isAdminOrOwner} />
     </main>
   );

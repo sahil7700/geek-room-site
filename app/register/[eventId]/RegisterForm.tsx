@@ -43,7 +43,7 @@ export default function RegisterForm({
 
   if (!registrationOpen) {
     return (
-      <main className="min-h-screen bg-[#050505] text-white flex items-center justify-center p-4">
+      <main className="min-h-screen text-white flex items-center justify-center p-4">
         <div className="text-center bg-zinc-900/50 p-12 rounded-2xl border border-zinc-800 max-w-md w-full">
           <h2 className="text-2xl font-bold mb-4 text-[#FF8C00]">Registration Closed</h2>
           <p className="text-zinc-400">Registration for {eventTitle} is currently closed.</p>
@@ -90,7 +90,7 @@ export default function RegisterForm({
 
   if (success) {
     return (
-      <main className="min-h-screen bg-[#050505] text-white flex items-center justify-center p-4">
+      <main className="min-h-screen text-white flex items-center justify-center p-4">
         <div className="text-center bg-zinc-900/50 p-12 rounded-2xl border border-[#4F9EFF]/20 max-w-md w-full">
           <CheckCircle className="w-16 h-16 text-[#4F9EFF] mx-auto mb-6" />
           <h2 className="text-2xl font-bold mb-4">Registration Successful!</h2>
@@ -101,7 +101,7 @@ export default function RegisterForm({
   }
 
   return (
-    <main className="min-h-screen bg-[#050505] text-white pt-32 pb-12 px-4 sm:px-6 lg:px-8">
+    <main className="min-h-screen text-white pt-32 pb-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-xl mx-auto">
         <div className="text-center mb-10">
           <p className="text-xs text-[#4F9EFF] font-mono uppercase tracking-widest mb-2">Register for</p>

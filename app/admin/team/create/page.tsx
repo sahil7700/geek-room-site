@@ -14,7 +14,7 @@ export default async function CreateMemberPage() {
   }
 
   return (
-    <main className="min-h-screen bg-black text-white pt-32 pb-12 px-4 sm:px-6 lg:px-8">
+    <main className="min-h-screen text-white pt-32 pb-12 px-4 sm:px-6 lg:px-8">
       <CreateMemberForm />
     </main>
   );

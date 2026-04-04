@@ -14,10 +14,10 @@
 }
 
 :root {
-  --background: #050505;
+  --background: #080a0f;
   --foreground: #ededed;
-  --accent: #00F2FF;
-  --accent-warm: #FF8C00;
+  --accent: #00c8ff;
+  --accent-warm: #ff8c00;
   --surface: #0A0A0A;
   --surface-raised: #1E1E26;
   --border: rgba(240, 237, 232, 0.08);
@@ -25,7 +25,14 @@
 
 html,
 body {
-  background: var(--background);
+  background-color: var(--background);
+  background-image: 
+    radial-gradient(ellipse 90% 55% at 50% 115%, rgba(0, 200, 255, 0.14) 0%, transparent 65%),
+    radial-gradient(ellipse 45% 35% at 95% 0%, rgba(127, 119, 221, 0.16) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 30% at 5% 100%, rgba(180, 40, 255, 0.09) 0%, transparent 55%);
+  background-attachment: fixed;
+  background-size: cover;
+  min-height: 100%;
   color: var(--foreground);
   font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
   margin: 0;
@@ -102,6 +109,7 @@ html {
       #00F2FF 40%,
       transparent 48%);
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   opacity: 0;

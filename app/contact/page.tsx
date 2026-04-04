@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import MinimalLunarBackground from "@/components/MinimalLunarBackground";
+
 
 export const metadata: Metadata = {
   title: "Contact — GEEKROOM",
@@ -8,16 +8,13 @@ export const metadata: Metadata = {
 
 export default function ContactPage() {
   return (
-    <main className="relative min-h-screen pt-24 pb-16 px-4 sm:px-6 overflow-hidden bg-[#1F1F2B] flex items-center justify-center">
+    <main className="relative min-h-screen pt-24 pb-16 px-4 sm:px-6 overflow-hidden flex items-center justify-center">
       {/* Syne 800 — same font as nav GEEK ROOM wordmark */}
       {/* eslint-disable-next-line @next/next/no-page-custom-font */}
       <style>{`@import url('https://fonts.googleapis.com/css2?family=Syne:wght@800&display=swap');`}</style>
 
-      {/* Minimal Lunar Runway */}
-      <MinimalLunarBackground />
 
-      {/* Dim overlay */}
-      <div className="fixed inset-0 bg-[#1F1F2B]/68 pointer-events-none z-[1]" />
+
 
       {/* Card — no glow, no shadow */}
       <div className="relative z-10 w-full max-w-4xl mx-auto rounded-3xl border border-white/5 bg-[#1A1A26]/70 p-8 sm:p-12 backdrop-blur-2xl hover:border-[#FF8C00]/40 hover:shadow-[0_0_30px_rgba(255,140,0,0.15)] transition-all duration-500">

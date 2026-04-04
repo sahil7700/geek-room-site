@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 // Wrapper to handle mounting/unmounting and scroll locking
 export default function StartupAnimation() {
   const [show, setShow] = useState(true);
+  const [isClosing, setIsClosing] = useState(false);
 
   useEffect(() => {
     // Only show once per session to not annoy returning users, or comment out for development
@@ -20,12 +21,15 @@ export default function StartupAnimation() {
   const handleComplete = () => {
     document.body.style.overflow = "";
     sessionStorage.setItem("homeAnimationPlayed", "true");
-    setShow(false);
+    setIsClosing(true);
+    setTimeout(() => {
+      setShow(false);
+    }, 800);
   };
 
   if (!show) return null;
 
-  return <StartupAnimationContent onComplete={handleComplete} />;
+  return <StartupAnimationContent onComplete={handleComplete} isClosing={isClosing} />;
 }
 
 // Deterministic pseudo-random values to avoid hydration mismatch
@@ -48,7 +52,7 @@ const SPARK_OFFSETS = [
 
 const CODE_SYMBOLS = ["</>", "{}", "//", "=>", "( )", "[]", "&&", "!=", "++", "::"];
 
-function StartupAnimationContent({ onComplete }: { onComplete: () => void }) {
+function StartupAnimationContent({ onComplete, isClosing }: { onComplete: () => void, isClosing?: boolean }) {
   const [phase, setPhase] = useState<
     "init" | "brackets" | "slash" | "flash" | "text" | "settle" | "hero"
   >("init");
@@ -73,7 +77,7 @@ function StartupAnimationContent({ onComplete }: { onComplete: () => void }) {
   }, [onComplete]);
 
   return (
-    <div className="logo-anim-root" data-phase={phase}>
+    <div className="logo-anim-root" data-phase={phase} style={{ opacity: isClosing ? 0 : 1, pointerEvents: isClosing ? 'none' : 'auto' }}>
       <style dangerouslySetInnerHTML={{ __html: `
         @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&display=swap');
 

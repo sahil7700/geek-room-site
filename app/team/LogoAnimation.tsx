@@ -61,7 +61,7 @@ export default function LogoAnimation({ onComplete }: LogoAnimationProps) {
           display: flex;
           align-items: center;
           justify-content: center;
-          background: #050505;
+          background: #080a0f;
           overflow: hidden;
           perspective: 1200px;
           font-family: 'Space Grotesk', sans-serif;
