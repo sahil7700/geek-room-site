@@ -33,10 +33,10 @@ export default function SupportPage() {
       
       <div className="relative z-10 w-full max-w-3xl mx-auto rounded-3xl border border-white/10 bg-[#050505]/40 p-8 sm:p-12 backdrop-blur-2xl shadow-[0_0_50px_rgba(0,0,0,0.5)]">
         <div className="text-center mb-10">
-          <h1 className="text-4xl sm:text-5xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-white via-[#4F9EFF] to-white pb-2 mb-4" style={{ fontFamily: "'Akira Expanded', sans-serif" }}>
+          <h1 className="text-4xl sm:text-5xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-white via-[#4F9EFF] to-white pb-2 mb-4" style={{ fontFamily: "var(--font-akira), sans-serif" }}>
             RAISE A <span className="text-[#4F9EFF]">TICKET</span>
           </h1>
-          <p className="text-[#ededed]/70 text-lg max-w-xl mx-auto" style={{ fontFamily: "'Comfortaa', sans-serif", fontWeight: 300 }}>
+          <p className="text-[#ededed]/70 text-lg max-w-xl mx-auto" style={{ fontFamily: "var(--font-comfortaa), sans-serif", fontWeight: 300 }}>
             Report issues, suggest features, or ask questions securely. Our system will log your inquiry immediately.
           </p>
         </div>
@@ -125,7 +125,7 @@ export default function SupportPage() {
               type="submit"
               disabled={isSubmitting}
               className="w-full group relative inline-flex items-center justify-center px-8 py-4 font-bold text-black bg-[#4F9EFF] rounded-xl overflow-hidden transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 disabled:hover:scale-100"
-              style={{ fontFamily: "'Akira Expanded', sans-serif" }}
+              style={{ fontFamily: "var(--font-akira), sans-serif" }}
             >
               <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out disabled:hidden" />
               <span className="relative flex items-center gap-2">

@@ -79,19 +79,17 @@ function StartupAnimationContent({ onComplete, isClosing }: { onComplete: () => 
   return (
     <div className="logo-anim-root" data-phase={phase} style={{ opacity: isClosing ? 0 : 1, pointerEvents: isClosing ? 'none' : 'auto' }}>
       <style dangerouslySetInnerHTML={{ __html: `
-        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&display=swap');
-
-        .logo-anim-root {
-          position: fixed;
-          inset: 0;
-          z-index: 99999;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          background: #050505;
-          overflow: hidden;
-          perspective: 1200px;
-          font-family: 'Space Grotesk', sans-serif;
+         .logo-anim-root {
+           position: fixed;
+           inset: 0;
+           z-index: 99999;
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           background: #050505;
+           overflow: hidden;
+           perspective: 1200px;
+           font-family: var(--font-space-grotesk), sans-serif;
           transition: opacity 0.8s cubic-bezier(0.4,0,0.2,1), transform 0.8s cubic-bezier(0.4,0,0.2,1), background 1s ease;
         }
         .logo-anim-root[data-phase="hero"] {
@@ -233,12 +231,12 @@ function StartupAnimationContent({ onComplete, isClosing }: { onComplete: () => 
           transition: all 0.7s cubic-bezier(0.34,1.56,0.64,1);
         }
 
-        .la-sword {
-          display: block;
-          color: #00F2FF;
-          font-size: clamp(5rem, 12vw, 9rem);
-          font-weight: 700;
-          font-family: 'Space Grotesk', sans-serif;
+         .la-sword {
+           display: block;
+           color: #00F2FF;
+           font-size: clamp(5rem, 12vw, 9rem);
+           font-weight: 700;
+           font-family: var(--font-space-grotesk), sans-serif;
           line-height: 1;
           opacity: 0;
           transform: rotate(0deg) scale(1);
@@ -439,7 +437,7 @@ function StartupAnimationContent({ onComplete, isClosing }: { onComplete: () => 
         /* ── Floating code particles ── */
         .la-code-particle {
           position: absolute;
-          font-family: 'Space Grotesk', monospace;
+           font-family: var(--font-space-grotesk), monospace;
           color: rgba(0,242,255,0.08);
           pointer-events: none;
           opacity: 0;

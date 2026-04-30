@@ -2,6 +2,7 @@
 
 import React, { useRef, useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { EventDetails } from "@/app/events/data";
 import { Calendar, MapPin, Users } from "lucide-react";
@@ -10,7 +11,7 @@ import "./MinimalEventCard.css";
 const formatEventDate = (dateStr: string) => {
   const date = new Date(dateStr);
   const day = date.getDate().toString().padStart(2, '0');
-  const month = date.toLocaleDateString('en-US', { month: 'short' }).toUpperCase();
+  const month = date.toLocaleDateString('en-US', { month: 'short', timeZone: "UTC" }).toUpperCase();
   const year = date.getFullYear();
   return { day, month, year };
 };
@@ -189,11 +190,13 @@ export default function MinimalEventCard({
         <div className="absolute inset-0 z-0 bg-[#050505]">
           {event.image ? (
             <>
-              <img 
+              <Image
                 src={event.image} 
                 alt={event.title} 
                 className="w-full h-full object-cover opacity-20 transition-transform duration-[1.5s] ease-out group-hover:scale-105" 
                 style={{ transform: isHovered ? 'scale(1.05)' : 'scale(1)' }}
+                fill
+                sizes={isLarge ? "(max-width: 768px) 100vw, 66vw" : "(max-width: 768px) 100vw, 33vw"}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-[#0A0A0A]/60 to-transparent" />
             </>

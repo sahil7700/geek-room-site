@@ -1,5 +1,6 @@
 import { MapPin, Calendar, ArrowRight } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { EventItem } from "@/app/actions/eventActions";
 
 export function EventCard({ event }: { event: EventItem }) {
@@ -9,10 +10,12 @@ export function EventCard({ event }: { event: EventItem }) {
     <div className="bg-zinc-900 rounded-2xl overflow-hidden border border-zinc-800 hover:border-zinc-700 transition-colors group flex flex-col">
       <div className="relative h-48 overflow-hidden bg-zinc-800">
         {event.image ? (
-          <img 
+          <Image
             src={event.image} 
             alt={event.title} 
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            fill
+            sizes="(max-width: 768px) 100vw, 33vw"
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-zinc-500">No Image</div>
@@ -31,7 +34,7 @@ export function EventCard({ event }: { event: EventItem }) {
         
         <div className="flex items-center text-zinc-400 text-sm mb-2">
           <Calendar className="w-4 h-4 mr-2" />
-          {new Date(event.date).toLocaleDateString("en-US", { year: 'numeric', month: 'long', day: 'numeric' })}
+          {new Date(event.date).toLocaleDateString("en-US", { year: 'numeric', month: 'long', day: 'numeric', timeZone: "UTC" })}
         </div>
         
         <div className="flex items-center text-zinc-400 text-sm mb-4">

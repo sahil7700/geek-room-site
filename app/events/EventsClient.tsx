@@ -3,6 +3,7 @@
 import { useState, useMemo, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 import { EventDetails } from "./data";
 import { 
   Calendar, MapPin, ArrowRight, Search, 
@@ -15,7 +16,7 @@ import MinimalEventCard from "@/components/MinimalEventCard";
 const formatEventDate = (dateStr: string) => {
   const date = new Date(dateStr);
   const day = date.getDate().toString().padStart(2, '0');
-  const month = date.toLocaleDateString('en-US', { month: 'short' }).toUpperCase();
+  const month = date.toLocaleDateString('en-US', { month: 'short', timeZone: "UTC" }).toUpperCase();
   const year = date.getFullYear();
   return { day, month, year };
 };
@@ -82,6 +83,10 @@ export default function EventsClient({ events }: { events: EventDetails[] }) {
 
   // Featured Event
   const featuredEvent = filteredEvents.length > 0 ? filteredEvents[0] : events[0];
+  const featuredEventDate = useMemo(
+    () => formatEventDate(featuredEvent.date),
+    [featuredEvent.date]
+  );
   const countdown = useCountdown(featuredEvent.date);
   const isUpcoming = featuredEvent.type === "upcoming";
 
@@ -118,7 +123,7 @@ export default function EventsClient({ events }: { events: EventDetails[] }) {
                 </span>
                 <span className="text-gray-400 flex items-center gap-1.5">
                   <Calendar className="w-3.5 h-3.5" />
-                  {formatEventDate(featuredEvent.date).month} {formatEventDate(featuredEvent.date).day}, {formatEventDate(featuredEvent.date).year}
+                  {featuredEventDate.month} {featuredEventDate.day}, {featuredEventDate.year}
                 </span>
               </div>
 
@@ -160,7 +165,13 @@ export default function EventsClient({ events }: { events: EventDetails[] }) {
             <div className="relative h-64 md:h-full w-full overflow-hidden order-1 md:order-2 bg-[#050505]">
               {featuredEvent.image ? (
                 <>
-                  <img src={featuredEvent.image} alt={featuredEvent.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 opacity-80" />
+                  <Image
+                    src={featuredEvent.image}
+                    alt={featuredEvent.title}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 40vw"
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 opacity-80"
+                  />
                   <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-[#0A0A0A]/80 via-transparent to-transparent" />
                 </>
               ) : (

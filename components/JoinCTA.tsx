@@ -67,7 +67,7 @@ export function JoinCTA() {
           />
           <span
             className="text-xs font-medium tracking-[0.2em] uppercase"
-            style={{ color: "#4F9EFF", fontFamily: "'Inter', sans-serif" }}
+            style={{ color: "#4F9EFF", fontFamily: "var(--font-inter), sans-serif" }}
           >
             Join Geek Room
           </span>
@@ -81,7 +81,7 @@ export function JoinCTA() {
           transition={{ duration: 0.9, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
           className="mb-6 leading-[1.05]"
           style={{
-            fontFamily: "'Syne', system-ui, sans-serif",
+            fontFamily: "var(--font-syne), system-ui, sans-serif",
             fontWeight: 800,
             fontSize: "clamp(2.6rem, 6vw, 4.5rem)",
             color: "#ededed",
@@ -102,7 +102,7 @@ export function JoinCTA() {
           transition={{ duration: 0.7, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
           className="mb-12 mx-auto max-w-xl leading-relaxed"
           style={{
-            fontFamily: "'Inter', sans-serif",
+            fontFamily: "var(--font-inter), sans-serif",
             fontSize: "1.0625rem",
             color: "rgba(255,255,255,0.5)",
             fontWeight: 400,
@@ -127,7 +127,7 @@ export function JoinCTA() {
             style={{
               backgroundColor: "#4F9EFF",
               color: "#050505",
-              fontFamily: "'Inter', sans-serif",
+              fontFamily: "var(--font-inter), sans-serif",
               letterSpacing: "0.01em",
             }}
             onMouseEnter={(e) => {
@@ -153,7 +153,7 @@ export function JoinCTA() {
             style={{
               border: "1.5px solid rgba(255,255,255,0.15)",
               color: "rgba(255,255,255,0.65)",
-              fontFamily: "'Inter', sans-serif",
+              fontFamily: "var(--font-inter), sans-serif",
               letterSpacing: "0.01em",
             }}
             onMouseEnter={(e) => {
@@ -179,7 +179,7 @@ export function JoinCTA() {
           transition={{ duration: 0.6, delay: 0.6 }}
           className="mt-10"
           style={{
-            fontFamily: "'Inter', sans-serif",
+            fontFamily: "var(--font-inter), sans-serif",
             fontSize: "0.8125rem",
             color: "rgba(255,255,255,0.22)",
           }}

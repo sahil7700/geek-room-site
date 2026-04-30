@@ -70,7 +70,7 @@ export function WhySection() {
           <div className="h-px w-8" style={{ backgroundColor: "#4F9EFF" }} />
           <span
             className="text-xs font-medium tracking-[0.2em] uppercase"
-            style={{ color: "#4F9EFF", fontFamily: "'Inter', sans-serif" }}
+            style={{ color: "#4F9EFF", fontFamily: "var(--font-inter), sans-serif" }}
           >
             Why Geek Room
           </span>
@@ -87,7 +87,7 @@ export function WhySection() {
               transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
               className="mb-6 leading-[1.08]"
               style={{
-                fontFamily: "'Syne', system-ui, sans-serif",
+                fontFamily: "var(--font-syne), system-ui, sans-serif",
                 fontWeight: 800,
                 fontSize: "clamp(2.4rem, 5vw, 3.75rem)",
                 color: "#ededed",
@@ -106,7 +106,7 @@ export function WhySection() {
               transition={{ duration: 0.7, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
               className="leading-relaxed max-w-sm"
               style={{
-                fontFamily: "'Inter', sans-serif",
+                fontFamily: "var(--font-inter), sans-serif",
                 fontSize: "1rem",
                 color: "rgba(255,255,255,0.5)",
                 fontWeight: 400,
@@ -196,7 +196,7 @@ export function WhySection() {
                     </h3>
                     <p
                       style={{
-                        fontFamily: "'Inter', sans-serif",
+                        fontFamily: "var(--font-inter), sans-serif",
                         fontSize: "0.9375rem",
                         color: "rgba(255,255,255,0.48)",
                         lineHeight: 1.65,

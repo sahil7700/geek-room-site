@@ -1,7 +1,11 @@
 "use client";
 import React, { useEffect, useRef } from "react";
 
+// Only render on non-mobile devices
+const isMobile = typeof window !== 'undefined' && window.matchMedia('(max-width: 768px)').matches;
+
 export function SupportRobotCanvas({ className = "" }: { className?: string }) {
+  if (isMobile) return null;
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {

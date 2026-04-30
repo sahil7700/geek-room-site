@@ -1,11 +1,11 @@
 import type { Metadata, Viewport } from "next";
-import { Syne, Inter } from "next/font/google";
+import { Syne, Inter, Space_Grotesk, Comfortaa } from "next/font/google";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { UnifiedBackground } from "@/components/UnifiedBackground";
 import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 import { getSettings } from "@/app/actions/settings";
-import { UnifiedBackground } from "@/components/UnifiedBackground";
 import "./globals.css";
 
 const syne = Syne({
@@ -19,6 +19,20 @@ const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
   weight: ["300", "400", "500", "600"],
+  display: "swap",
+});
+
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-space-grotesk",
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  display: "swap",
+});
+
+const comfortaa = Comfortaa({
+  variable: "--font-comfortaa",
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
   display: "swap",
 });
 
@@ -68,9 +82,9 @@ export default async function RootLayout({
       }
     }}>
       <html lang="en">
-        <body
-          className={`${syne.variable} ${inter.variable} flex min-h-screen flex-col antialiased`}
-        >
+          <body
+            className={`${syne.variable} ${inter.variable} ${spaceGrotesk.variable} ${comfortaa.variable} flex min-h-screen flex-col antialiased`}
+          >
           {/* Unified background — sits at z-index: -1, behind the whole page */}
           <UnifiedBackground />
 

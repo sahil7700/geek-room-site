@@ -24,35 +24,25 @@
 .DS_Store
 *.pem
 
-# debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.pnpm-debug.log*
-
 # env files (can opt-in for committing if needed)
 .env*
-#extras
-logo.jpg
 .env.local
+
+# pdf/text artifacts
+pdf_text.txt
+pdf_text_*.txt
+
+# python virtual environment
+.venv/
+
+# logs
+*.log
+npm-debug.log*
+.pnpm-debug.log*
+
 # vercel
 .vercel
 
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-
-<<<<<<< HEAD
-# AI assistant data
-.claude/
-MEMORY.md
-*.md.bak
-
-# External reference folders (not part of project)
-# These folders are for reference only and should not be copied to the repo:
-# geek veek, geek veek 2.0, hackquanta, hackforce, aptiverse, BlockGen
-# Images are located in public/images/events/
-
-# clerk configuration (can include secrets)
-/.clerk/
-.env*.local

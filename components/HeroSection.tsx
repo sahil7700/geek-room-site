@@ -1,11 +1,16 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { motion, useScroll, useTransform } from "framer-motion";
 import Link from "next/link";
 import { useRef } from "react";
 import { ArrowRight, Users, Calendar, MapPin } from "lucide-react";
 import { AsciiVisual } from "@/components/AsciiVisual";
-import { SupportRobotCanvas } from "@/components/SupportRobotCanvas";
+
+const SupportRobotCanvas = dynamic(
+  () => import("@/components/SupportRobotCanvas").then((mod) => mod.SupportRobotCanvas),
+  { ssr: false, loading: () => null }
+);
 
 export function HeroSection({ eventsCount, membersCount }: { eventsCount?: number; membersCount?: number }) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -119,7 +124,7 @@ export function HeroSection({ eventsCount, membersCount }: { eventsCount?: numbe
               />
               <span
                 className="text-xs font-medium tracking-[0.2em] uppercase"
-                style={{ color: "#4F9EFF", fontFamily: "'Inter', sans-serif" }}
+                style={{ color: "#4F9EFF", fontFamily: "var(--font-inter), sans-serif" }}
               >
                 GEEKROOM — JIMS EMTC
               </span>
@@ -132,7 +137,7 @@ export function HeroSection({ eventsCount, membersCount }: { eventsCount?: numbe
               transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
               className="mb-6 leading-[1.05]"
               style={{
-                fontFamily: "'Syne', system-ui, sans-serif",
+                fontFamily: "var(--font-syne), system-ui, sans-serif",
                 fontWeight: 800,
                 fontSize: "clamp(2rem, 7vw, 5rem)",
                 color: "#ededed",
@@ -168,7 +173,7 @@ export function HeroSection({ eventsCount, membersCount }: { eventsCount?: numbe
               transition={{ duration: 0.8, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
               className="mb-10 max-w-md leading-relaxed"
               style={{
-                fontFamily: "'Inter', sans-serif",
+                fontFamily: "var(--font-inter), sans-serif",
                 fontSize: "1.0625rem",
                 color: "rgba(255,255,255,0.6)",
                 fontWeight: 400,
@@ -192,7 +197,7 @@ export function HeroSection({ eventsCount, membersCount }: { eventsCount?: numbe
                 style={{
                   backgroundColor: "#4F9EFF",
                   color: "#050505",
-                  fontFamily: "'Inter', sans-serif",
+                  fontFamily: "var(--font-inter), sans-serif",
                   letterSpacing: "0.01em",
                 }}
                 onMouseEnter={(e) => {
@@ -216,7 +221,7 @@ export function HeroSection({ eventsCount, membersCount }: { eventsCount?: numbe
                 style={{
                   border: "1.5px solid rgba(255,255,255,0.15)",
                   color: "rgba(255,255,255,0.75)",
-                  fontFamily: "'Inter', sans-serif",
+                  fontFamily: "var(--font-inter), sans-serif",
                   letterSpacing: "0.01em",
                 }}
                 onMouseEnter={(e) => {
@@ -258,7 +263,7 @@ export function HeroSection({ eventsCount, membersCount }: { eventsCount?: numbe
                     </div>
                     <div
                       className="text-xs leading-snug mt-0.5"
-                      style={{ color: "rgba(255,255,255,0.4)", fontFamily: "'Inter', sans-serif" }}
+                      style={{ color: "rgba(255,255,255,0.4)", fontFamily: "var(--font-inter), sans-serif" }}
                     >
                       {label}
                     </div>

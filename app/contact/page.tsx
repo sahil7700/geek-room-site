@@ -10,8 +10,7 @@ export default function ContactPage() {
   return (
     <main className="relative min-h-screen pt-24 pb-16 px-4 sm:px-6 overflow-hidden flex items-center justify-center">
       {/* Syne 800 — same font as nav GEEK ROOM wordmark */}
-      {/* eslint-disable-next-line @next/next/no-page-custom-font */}
-      <style>{`@import url('https://fonts.googleapis.com/css2?family=Syne:wght@800&display=swap');`}</style>
+
 
 
 
@@ -28,7 +27,7 @@ export default function ContactPage() {
         */}
         <h1
           style={{
-            fontFamily: "'Syne', system-ui, sans-serif",
+            fontFamily: "var(--font-syne), system-ui, sans-serif",
             fontWeight: 800,
             letterSpacing: "-0.02em",
             fontSize: "clamp(1.5rem, 3.5vw, 2.4rem)",

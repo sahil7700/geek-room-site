@@ -13,25 +13,17 @@
   "dependencies": {
     "@clerk/nextjs": "^7.0.1",
     "@clerk/themes": "^2.4.57",
-    "@gsap/react": "^2.1.2",
     "@prisma/client": "^6.19.2",
     "@supabase/supabase-js": "^2.99.1",
-    "@tsparticles/engine": "^3.9.1",
-    "@tsparticles/interaction-external-bubble": "^3.9.1",
-    "@tsparticles/interaction-external-repulse": "^3.9.1",
-    "@tsparticles/react": "^3.0.0",
-    "@tsparticles/slim": "^3.9.1",
-    "@types/three": "^0.183.1",
     "framer-motion": "^12.35.0",
-    "gsap": "^3.14.2",
     "lenis": "^1.3.21",
     "lucide-react": "^0.577.0",
     "next": "16.1.6",
     "react": "19.2.3",
-    "react-dom": "19.2.3",
-    "three": "^0.183.2"
+    "react-dom": "19.2.3"
   },
   "devDependencies": {
+    "@next/bundle-analyzer": "^16.1.6",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20.19.37",
     "@types/react": "^19",

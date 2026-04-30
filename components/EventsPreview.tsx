@@ -25,6 +25,7 @@ function formatDate(dateStr: string) {
       day: "numeric",
       month: "short",
       year: "numeric",
+      timeZone: "UTC",
     });
   } catch {
     return dateStr;
@@ -80,7 +81,7 @@ export function EventsPreview({ events }: { events: EventItem[] }) {
               <div className="h-px w-8" style={{ backgroundColor: "#4F9EFF" }} />
               <span
                 className="text-xs font-medium tracking-[0.2em] uppercase"
-                style={{ color: "#4F9EFF", fontFamily: "'Inter', sans-serif" }}
+                style={{ color: "#4F9EFF", fontFamily: "var(--font-inter), sans-serif" }}
               >
                 Signature Events
               </span>
@@ -93,7 +94,7 @@ export function EventsPreview({ events }: { events: EventItem[] }) {
               transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
               className="leading-[1.05]"
               style={{
-                fontFamily: "'Syne', system-ui, sans-serif",
+                fontFamily: "var(--font-syne), system-ui, sans-serif",
                 fontWeight: 800,
                 fontSize: "clamp(2.2rem, 5vw, 3.5rem)",
                 color: "#ededed",
@@ -115,7 +116,7 @@ export function EventsPreview({ events }: { events: EventItem[] }) {
               className="inline-flex items-center gap-2 text-sm font-medium transition-all duration-200"
               style={{
                 color: "rgba(255,255,255,0.5)",
-                fontFamily: "'Inter', sans-serif",
+                fontFamily: "var(--font-inter), sans-serif",
               }}
               onMouseEnter={(e) => {
                 (e.currentTarget as HTMLElement).style.color = "#4F9EFF";
@@ -147,7 +148,7 @@ export function EventsPreview({ events }: { events: EventItem[] }) {
           >
             <p
               style={{
-                fontFamily: "'Inter', sans-serif",
+                fontFamily: "var(--font-inter), sans-serif",
                 color: "rgba(255,255,255,0.35)",
                 fontSize: "0.9rem",
               }}
@@ -172,7 +173,7 @@ export function EventsPreview({ events }: { events: EventItem[] }) {
             style={{
               border: "1.5px solid rgba(0,242,255,0.25)",
               color: "#4F9EFF",
-              fontFamily: "'Inter', sans-serif",
+              fontFamily: "var(--font-inter), sans-serif",
               letterSpacing: "0.01em",
             }}
             onMouseEnter={(e) => {
@@ -230,11 +231,13 @@ function EventCard({ event, index }: { event: EventItem; index: number }) {
         <div className="relative h-52 overflow-hidden bg-[#111111]">
           {imageSrc ? (
             <>
-              <img
+              <Image
                 src={imageSrc}
                 alt={event.title}
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 style={{ opacity: 0.85 }}
+                fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               />
               {/* Gradient overlay */}
               <div
@@ -272,7 +275,7 @@ function EventCard({ event, index }: { event: EventItem; index: number }) {
                   backgroundColor: "rgba(5,5,5,0.85)",
                   border: "1px solid rgba(255,255,255,0.12)",
                   color: "rgba(255,255,255,0.65)",
-                  fontFamily: "'Inter', sans-serif",
+                  fontFamily: "var(--font-inter), sans-serif",
                   backdropFilter: "blur(8px)",
                 }}
               >
@@ -304,7 +307,7 @@ function EventCard({ event, index }: { event: EventItem; index: number }) {
                 <Calendar className="w-3.5 h-3.5" style={{ color: "rgba(0,242,255,0.6)" }} />
                 <span
                   style={{
-                    fontFamily: "'Inter', sans-serif",
+                    fontFamily: "var(--font-inter), sans-serif",
                     fontSize: "0.8125rem",
                     color: "rgba(255,255,255,0.4)",
                   }}
@@ -318,7 +321,7 @@ function EventCard({ event, index }: { event: EventItem; index: number }) {
                 <MapPin className="w-3.5 h-3.5" style={{ color: "rgba(255,140,0,0.6)" }} />
                 <span
                   style={{
-                    fontFamily: "'Inter', sans-serif",
+                    fontFamily: "var(--font-inter), sans-serif",
                     fontSize: "0.8125rem",
                     color: "rgba(255,255,255,0.4)",
                   }}
@@ -333,7 +336,7 @@ function EventCard({ event, index }: { event: EventItem; index: number }) {
           <p
             className="line-clamp-2 leading-relaxed"
             style={{
-              fontFamily: "'Inter', sans-serif",
+              fontFamily: "var(--font-inter), sans-serif",
               fontSize: "0.875rem",
               color: "rgba(255,255,255,0.38)",
               fontWeight: 400,
@@ -345,7 +348,7 @@ function EventCard({ event, index }: { event: EventItem; index: number }) {
           {/* Arrow link */}
           <div
             className="mt-5 flex items-center gap-1.5 text-xs font-medium transition-all duration-200"
-            style={{ color: "rgba(0,242,255,0.5)", fontFamily: "'Inter', sans-serif" }}
+            style={{ color: "rgba(0,242,255,0.5)", fontFamily: "var(--font-inter), sans-serif" }}
           >
             View event
             <ArrowRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" />

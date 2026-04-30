@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import { useUser, UserButton } from "@clerk/nextjs";
@@ -67,9 +68,7 @@ export function Header({ hideJoin }: { hideJoin?: boolean }) {
     <>
       {/* ── global style injection ─────────────────────────────── */}
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@400;500;600&display=swap');
-
-        .nav-link-item {
+         .nav-link-item {
           position: relative;
           padding: 8px 15px;
           border-radius: 9999px;
@@ -141,15 +140,18 @@ export function Header({ hideJoin }: { hideJoin?: boolean }) {
             href="/"
             className="flex items-center gap-1.5 md:gap-2 no-underline"
           >
-            <img
+            <Image
               src="/logo.jpg"
               alt="Geek Room"
               className="h-5 w-5 md:h-8 md:w-8 rounded-[4px] md:rounded-[6px] object-cover"
+              width={32}
+              height={32}
+              sizes="(max-width: 768px) 20px, 32px"
             />
-            <span className="font-extrabold text-[1rem] md:text-[1.35rem] text-[#ededed] tracking-[-0.02em]" style={{ fontFamily: "'Syne', system-ui, sans-serif" }}>
+            <span className="font-extrabold text-[1rem] md:text-[1.35rem] text-[#ededed] tracking-[-0.02em]" style={{ fontFamily: "var(--font-syne), system-ui, sans-serif" }}>
               GEEK
             </span>
-            <span className="font-extrabold text-[1rem] md:text-[1.35rem] text-[#4F9EFF] tracking-[-0.02em]" style={{ fontFamily: "'Syne', system-ui, sans-serif" }}>
+            <span className="font-extrabold text-[1rem] md:text-[1.35rem] text-[#4F9EFF] tracking-[-0.02em]" style={{ fontFamily: "var(--font-syne), system-ui, sans-serif" }}>
               ROOM
             </span>
           </Link>
@@ -204,7 +206,7 @@ export function Header({ hideJoin }: { hideJoin?: boolean }) {
                 className="hidden md:flex items-center justify-center font-medium transition-all duration-200 h-10 px-4 text-[0.85rem]"
                 style={{
                   ...capsuleBase,
-                  fontFamily: "'Inter', sans-serif",
+                  fontFamily: "var(--font-inter), sans-serif",
                   color: "rgba(255,255,255,0.75)",
                   background: "rgba(255,255,255,0.05)",
                   border: "1px solid rgba(255,255,255,0.12)",
@@ -276,18 +278,16 @@ export function Header({ hideJoin }: { hideJoin?: boolean }) {
               href="/"
               style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: "6px", padding: "5px 12px" }}
             >
-              <img
+              <Image
                 src="/logo.jpg"
                 alt="Geek Room"
-                style={{
-                  height: "24px",
-                  width: "24px",
-                  borderRadius: "4px",
-                  objectFit: "cover",
-                }}
+                width={24}
+                height={24}
+                sizes="24px"
+                style={{ borderRadius: "4px", objectFit: "cover" }}
               />
               <span style={{
-                fontFamily: "'Syne', system-ui, sans-serif",
+                fontFamily: "var(--font-syne), system-ui, sans-serif",
                 fontWeight: 800,
                 fontSize: "1.15rem",
                 color: "#ededed",
@@ -296,7 +296,7 @@ export function Header({ hideJoin }: { hideJoin?: boolean }) {
                 GEEK
               </span>
               <span style={{
-                fontFamily: "'Syne', system-ui, sans-serif",
+                fontFamily: "var(--font-syne), system-ui, sans-serif",
                 fontWeight: 800,
                 fontSize: "1.15rem",
                 color: "#4F9EFF",
@@ -358,7 +358,7 @@ export function Header({ hideJoin }: { hideJoin?: boolean }) {
                   height: "36px",
                   padding: "0 18px",
                   fontSize: "0.875rem",
-                  fontFamily: "'Inter', sans-serif",
+                  fontFamily: "var(--font-inter), sans-serif",
                   color: "rgba(255,255,255,0.65)",
                   background: "rgba(79,158,255,0.07)",
                   border: "1px solid rgba(79,158,255,0.2)",
@@ -390,15 +390,18 @@ export function Header({ hideJoin }: { hideJoin?: boolean }) {
               }}
               className="flex items-center gap-1.5 no-underline"
             >
-              <img
+              <Image
                 src="/logo.jpg"
                 alt="Geek Room"
                 className="h-5 w-5 rounded-[4px] object-cover"
+                width={20}
+                height={20}
+                sizes="20px"
               />
-              <span className="font-extrabold text-[1rem] text-[#ededed] tracking-[-0.02em]" style={{ fontFamily: "'Syne', system-ui, sans-serif" }}>
+              <span className="font-extrabold text-[1rem] text-[#ededed] tracking-[-0.02em]" style={{ fontFamily: "var(--font-syne), system-ui, sans-serif" }}>
                 GEEK
               </span>
-              <span className="font-extrabold text-[1rem] text-[#4F9EFF] tracking-[-0.02em]" style={{ fontFamily: "'Syne', system-ui, sans-serif" }}>
+              <span className="font-extrabold text-[1rem] text-[#4F9EFF] tracking-[-0.02em]" style={{ fontFamily: "var(--font-syne), system-ui, sans-serif" }}>
                 ROOM
               </span>
             </Link>
@@ -446,7 +449,7 @@ export function Header({ hideJoin }: { hideJoin?: boolean }) {
                     onClick={() => setMenuOpen(false)}
                     className="flex items-center px-3 py-3 rounded-xl text-base font-medium transition-all duration-200"
                     style={{
-                      fontFamily: "'Inter', sans-serif",
+                      fontFamily: "var(--font-inter), sans-serif",
                       color: isActive ? "#ededed" : "rgba(255,255,255,0.45)",
                       backgroundColor: isActive ? "rgba(255,255,255,0.05)" : "transparent",
                       borderLeft: isActive ? "2px solid #4F9EFF" : "2px solid transparent",
@@ -465,7 +468,7 @@ export function Header({ hideJoin }: { hideJoin?: boolean }) {
                   onClick={() => setMenuOpen(false)}
                   className="flex items-center justify-center w-full px-4 py-3.5 rounded-xl text-[0.95rem] font-medium transition-all duration-200"
                   style={{
-                    fontFamily: "'Inter', sans-serif",
+                    fontFamily: "var(--font-inter), sans-serif",
                     background: "rgba(79,158,255,0.1)",
                     border: "1px solid rgba(79,158,255,0.2)",
                     color: "#ededed",

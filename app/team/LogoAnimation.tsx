@@ -52,19 +52,17 @@ export default function LogoAnimation({ onComplete }: LogoAnimationProps) {
   return (
     <div className="logo-anim-root" data-phase={phase}>
       <style dangerouslySetInnerHTML={{ __html: `
-        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&display=swap');
-
-        .logo-anim-root {
-          position: fixed;
-          inset: 0;
-          z-index: 99999;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          background: #080a0f;
-          overflow: hidden;
-          perspective: 1200px;
-          font-family: 'Space Grotesk', sans-serif;
+         .logo-anim-root {
+           position: fixed;
+           inset: 0;
+           z-index: 99999;
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           background: #080a0f;
+           overflow: hidden;
+           perspective: 1200px;
+           font-family: var(--font-space-grotesk), sans-serif;
           transition: opacity 0.8s cubic-bezier(0.4,0,0.2,1), transform 0.8s cubic-bezier(0.4,0,0.2,1), background 1s ease;
         }
         .logo-anim-root[data-phase="hero"] {
@@ -410,9 +408,9 @@ export default function LogoAnimation({ onComplete }: LogoAnimationProps) {
         }
 
         /* ── Floating code particles ── */
-        .la-code-particle {
-          position: absolute;
-          font-family: 'Space Grotesk', monospace;
+         .la-code-particle {
+           position: absolute;
+           font-family: var(--font-space-grotesk), monospace;
           color: rgba(0,242,255,0.08);
           pointer-events: none;
           opacity: 0;

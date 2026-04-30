@@ -6,11 +6,15 @@ import { EventsPreview } from "@/components/EventsPreview";
 import { GalleryPreview } from "@/components/GalleryPreview";
 import { CultureSection } from "@/components/CultureSection";
 import { JoinCTA } from "@/components/JoinCTA";
+import nextDynamic from "next/dynamic";
 
 import { getMembers } from "@/app/actions/teamActions";
 import { getEvents } from "@/app/actions/eventActions";
-import StartupAnimation from "@/components/StartupAnimation";
 export const dynamic = "force-dynamic";
+
+const StartupAnimation = nextDynamic(() => import("@/components/StartupAnimation"), {
+  loading: () => null,
+});
 
 export default async function Home() {
   const members = await getMembers();

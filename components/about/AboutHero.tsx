@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import gsap from "gsap";
+// GSAP removed for performance - using framer-motion instead
 
 // ── Font setup ────────────────────────────────────────────────────────────────
 // Comfortaa Light → Google Fonts (add to layout.tsx <head>):
@@ -26,35 +26,12 @@ import gsap from "gsap";
 export function AboutHero({ membersCount, eventsCount }: { membersCount?: number; eventsCount?: number }) {
   const container = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.fromTo(".hero-line", { opacity: 0, x: -40 }, {
-        opacity: 1, x: 0, stagger: 0.12, duration: 0.9,
-        ease: "power4.out", delay: 0.2,
-      });
-      gsap.fromTo(".hero-sub", { opacity: 0, y: 16 }, {
-        opacity: 1, y: 0, duration: 0.7, ease: "power3.out", delay: 0.7,
-      });
-      gsap.to(".logo-core", {
-        filter: "drop-shadow(0 0 28px #4F9EFF) drop-shadow(0 0 56px #4F9EFF33)",
-        duration: 2, repeat: -1, yoyo: true, ease: "sine.inOut",
-      });
-      gsap.to(".orbit-wrapper-blue", {
-        rotation: 360, duration: 12, repeat: -1,
-        ease: "none", transformOrigin: "0px 0px",
-      });
-      gsap.to(".orbit-wrapper-orange", {
-        rotation: -360, duration: 20, repeat: -1,
-        ease: "none", transformOrigin: "0px 0px",
-      });
-    }, container);
-    return () => ctx.revert();
-  }, []);
-
+  // GSAP animations removed - using CSS animations and framer-motion instead
+  // This reduces bundle size and improves performance
   const SIZE = 400;
   const OUTER_R = (SIZE - 20) / 2;
   const INNER_R = (SIZE - 140) / 2;
-
+  
   return (
     <section ref={container} className="relative min-h-screen flex items-center px-6 max-w-7xl mx-auto">
       <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-12 items-center pt-20 pb-10">
@@ -71,7 +48,7 @@ export function AboutHero({ membersCount, eventsCount }: { membersCount?: number
           >
             <span
               className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#4F9EFF]/25 bg-[#4F9EFF]/5 text-[#4F9EFF] tracking-[0.3em] uppercase"
-              style={{ fontFamily: "'Comfortaa', sans-serif", fontWeight: 300, fontSize: "10px" }}
+              style={{ fontFamily: "var(--font-comfortaa), sans-serif", fontWeight: 300, fontSize: "10px" }}
             >
               <span className="w-1.5 h-1.5 rounded-full bg-[#4F9EFF] animate-pulse" />
               System Identity — Online
@@ -79,7 +56,7 @@ export function AboutHero({ membersCount, eventsCount }: { membersCount?: number
           </motion.div>
 
           {/* Heading — Akira Expanded */}
-          <h1 className="tracking-tighter leading-[0.9] mb-6" style={{ fontFamily: "'Akira Expanded', sans-serif" }}>
+          <h1 className="tracking-tighter leading-[0.9] mb-6" style={{ fontFamily: "var(--font-akira), sans-serif" }}>
             <span className="hero-line block text-[clamp(2.5rem,8vw,6rem)] text-transparent bg-clip-text bg-gradient-to-b from-white to-white/50">
               WE ARE
             </span>
@@ -94,7 +71,7 @@ export function AboutHero({ membersCount, eventsCount }: { membersCount?: number
           {/* Description — Comfortaa Light */}
           <p
             className="hero-sub text-[#ededed]/50 text-base leading-relaxed max-w-sm mb-8"
-            style={{ fontFamily: "'Comfortaa', sans-serif", fontWeight: 300 }}
+            style={{ fontFamily: "var(--font-comfortaa), sans-serif", fontWeight: 300 }}
           >
             The official tech society of JIMS EMTC — where innovation meets code.
           </p>
@@ -107,12 +84,12 @@ export function AboutHero({ membersCount, eventsCount }: { membersCount?: number
               { val: "5+", lbl: "Years" },
             ].map((s) => (
               <div key={s.lbl} className="flex flex-col">
-                <span className="text-2xl text-[#4F9EFF]" style={{ fontFamily: "'Akira Expanded', sans-serif" }}>
+                <span className="text-2xl text-[#4F9EFF]" style={{ fontFamily: "var(--font-akira), sans-serif" }}>
                   {s.val}
                 </span>
                 <span
                   className="text-[10px] text-white/25 tracking-widest uppercase"
-                  style={{ fontFamily: "'Comfortaa', sans-serif", fontWeight: 300 }}
+                  style={{ fontFamily: "var(--font-comfortaa), sans-serif", fontWeight: 300 }}
                 >
                   {s.lbl}
                 </span>
@@ -129,7 +106,7 @@ export function AboutHero({ membersCount, eventsCount }: { membersCount?: number
             <div className="w-8 h-px bg-gradient-to-r from-[#4F9EFF]/60 to-transparent" />
             <span
               className="text-[10px] text-white/20 tracking-[0.3em] uppercase"
-              style={{ fontFamily: "'Comfortaa', sans-serif", fontWeight: 300 }}
+              style={{ fontFamily: "var(--font-comfortaa), sans-serif", fontWeight: 300 }}
             >
               Scroll to explore
             </span>
@@ -177,16 +154,16 @@ export function AboutHero({ membersCount, eventsCount }: { membersCount?: number
 
             {/* Corner labels — Comfortaa Light */}
             <span className="absolute top-5 left-5 text-[#4F9EFF]/35 tracking-widest select-none"
-              style={{ fontFamily: "'Comfortaa', sans-serif", fontWeight: 300, fontSize: "10px" }}>
+              style={{ fontFamily: "var(--font-comfortaa), sans-serif", fontWeight: 300, fontSize: "10px" }}>
               v2.11.26
             </span>
             <span className="absolute top-5 right-5 text-[#4F9EFF]/35 tracking-widest select-none flex items-center gap-1.5"
-              style={{ fontFamily: "'Comfortaa', sans-serif", fontWeight: 300, fontSize: "10px" }}>
+              style={{ fontFamily: "var(--font-comfortaa), sans-serif", fontWeight: 300, fontSize: "10px" }}>
               <span className="w-1.5 h-1.5 rounded-full bg-[#4F9EFF]" style={{ boxShadow: "0 0 6px #4F9EFF" }} />
               @geekroom
             </span>
             <span className="absolute bottom-5 right-5 text-[#4F9EFF]/25 tracking-widest select-none"
-              style={{ fontFamily: "'Comfortaa', sans-serif", fontWeight: 300, fontSize: "10px" }}>
+              style={{ fontFamily: "var(--font-comfortaa), sans-serif", fontWeight: 300, fontSize: "10px" }}>
               www.geekroom.in
             </span>
 

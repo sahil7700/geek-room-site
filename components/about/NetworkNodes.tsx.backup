@@ -307,12 +307,10 @@ export function NetworkNodes() {
     window.addEventListener("resize", resize);
     rafRef.current = requestAnimationFrame(draw);
 
-    // Simple fade-in effect without GSAP
-    canvas.style.opacity = '0';
-    setTimeout(() => {
-      canvas.style.transition = 'opacity 1.4s ease';
-      canvas.style.opacity = '1';
-    }, 100);
+    gsap.fromTo(canvas, { opacity: 0 }, {
+      opacity: 1, duration: 1.4, ease: "power2.out",
+      // GSAP removed
+    });
 
     return () => {
       cancelAnimationFrame(rafRef.current);

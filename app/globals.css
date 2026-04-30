@@ -11,6 +11,7 @@
   --font-display: var(--font-syne), 'Syne', system-ui, sans-serif;
   --font-sans: var(--font-inter), 'Inter', system-ui, sans-serif;
   --font-mono: ui-monospace, 'Geist Mono', monospace;
+  --font-akira: 'Akira Expanded', sans-serif;
 }
 
 :root {

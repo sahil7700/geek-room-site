@@ -1,6 +1,5 @@
-"use client";
-
 import Link from "next/link";
+import Image from "next/image";
 
 const navLinks = [
   { href: "/about", label: "About" },
@@ -12,6 +11,8 @@ const navLinks = [
 ] as const;
 
 export function Footer({ hideJoin }: { hideJoin?: boolean }) {
+  const currentYear = new Date().getUTCFullYear();
+
   return (
     <footer
       className="relative w-full"
@@ -23,19 +24,17 @@ export function Footer({ hideJoin }: { hideJoin?: boolean }) {
       <div className="mx-auto max-w-7xl px-6 lg:px-12 py-8 flex flex-col sm:flex-row items-center justify-between gap-6">
         {/* Wordmark */}
         <Link href="/" className="flex items-center gap-2" style={{ textDecoration: "none" }}>
-          <img
+          <Image
             src="/logo.jpg"
             alt="Geek Room"
-            style={{
-              height: "28px",
-              width: "28px",
-              borderRadius: "5px",
-              objectFit: "cover",
-            }}
+            width={28}
+            height={28}
+            className="rounded-[5px] object-cover"
+            sizes="28px"
           />
           <span
             style={{
-              fontFamily: "'Syne', system-ui, sans-serif",
+              fontFamily: "var(--font-syne), system-ui, sans-serif",
               fontWeight: 800,
               fontSize: "1.0625rem",
               color: "#ededed",
@@ -46,7 +45,7 @@ export function Footer({ hideJoin }: { hideJoin?: boolean }) {
           </span>
           <span
             style={{
-              fontFamily: "'Syne', system-ui, sans-serif",
+              fontFamily: "var(--font-syne), system-ui, sans-serif",
               fontWeight: 800,
               fontSize: "1.0625rem",
               color: "#4F9EFF",
@@ -65,19 +64,8 @@ export function Footer({ hideJoin }: { hideJoin?: boolean }) {
               <li key={href}>
                 <Link
                   href={href}
-                  style={{
-                    fontFamily: "'Inter', sans-serif",
-                    fontSize: "0.8125rem",
-                    color: "rgba(255,255,255,0.38)",
-                    fontWeight: 400,
-                    transition: "color 0.2s",
-                  }}
-                  onMouseEnter={(e) => {
-                    (e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.75)";
-                  }}
-                  onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.38)";
-                  }}
+                  className="text-[0.8125rem] font-normal text-white/40 transition-colors hover:text-white/75"
+                  style={{ fontFamily: "var(--font-inter), sans-serif" }}
                 >
                   {label}
                 </Link>
@@ -88,12 +76,12 @@ export function Footer({ hideJoin }: { hideJoin?: boolean }) {
         {/* Copyright */}
         <span
           style={{
-            fontFamily: "'Inter', sans-serif",
+            fontFamily: "var(--font-inter), sans-serif",
             fontSize: "0.8125rem",
             color: "rgba(255,255,255,0.22)",
           }}
         >
-          © Geek Room {new Date().getFullYear()}
+          © Geek Room {currentYear}
         </span>
       </div>
     </footer>

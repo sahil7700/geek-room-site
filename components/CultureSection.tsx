@@ -61,7 +61,7 @@ export function CultureSection() {
           <div className="h-px w-8" style={{ backgroundColor: "#4F9EFF" }} />
           <span
             className="text-xs font-medium tracking-[0.2em] uppercase"
-            style={{ color: "#4F9EFF", fontFamily: "'Inter', sans-serif" }}
+            style={{ color: "#4F9EFF", fontFamily: "var(--font-inter), sans-serif" }}
           >
             Culture
           </span>
@@ -75,7 +75,7 @@ export function CultureSection() {
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
           className="mb-4 leading-[1.05]"
           style={{
-            fontFamily: "'Syne', system-ui, sans-serif",
+            fontFamily: "var(--font-syne), system-ui, sans-serif",
             fontWeight: 800,
             fontSize: "clamp(2.2rem, 5vw, 3.5rem)",
             color: "#ededed",
@@ -94,7 +94,7 @@ export function CultureSection() {
           transition={{ duration: 0.7, delay: 0.15 }}
           className="mb-20 max-w-lg leading-relaxed"
           style={{
-            fontFamily: "'Inter', sans-serif",
+            fontFamily: "var(--font-inter), sans-serif",
             fontSize: "1rem",
             color: "rgba(255,255,255,0.45)",
             fontWeight: 400,
@@ -153,7 +153,7 @@ export function CultureSection() {
               {/* Detail */}
               <p
                 style={{
-                  fontFamily: "'Inter', sans-serif",
+                  fontFamily: "var(--font-inter), sans-serif",
                   fontSize: "0.9375rem",
                   color: "rgba(255,255,255,0.42)",
                   lineHeight: 1.7,

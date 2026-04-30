@@ -1,8 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+// GSAP removed for performance - using framer-motion instead
 
 const timeline = [
   { year: "Nov 2024", title: "Society Formed", desc: "Founded at JIMS EMTC." },
@@ -14,19 +13,7 @@ const timeline = [
 export function AboutStory() {
   const ref = useRef<HTMLElement>(null);
 
-  useEffect(() => {
-    gsap.registerPlugin(ScrollTrigger);
-    const ctx = gsap.context(() => {
-      gsap.fromTo(".bento-card", { opacity: 0, y: 40, scale: 0.97 }, {
-        opacity: 1, y: 0, scale: 1,
-        stagger: 0.08,
-        duration: 0.7,
-        ease: "power3.out",
-        scrollTrigger: { trigger: ref.current, start: "top 78%", toggleActions: "play none none reverse" },
-      });
-    }, ref);
-    return () => ctx.revert();
-  }, []);
+  // GSAP removed - using CSS animations and framer-motion for better performance
 
   return (
     <section ref={ref} className="relative py-24 z-10 max-w-6xl mx-auto px-6">

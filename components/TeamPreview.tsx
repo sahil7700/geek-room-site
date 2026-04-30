@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 import { X, Github, Linkedin, ArrowRight } from "lucide-react";
 import { TeamMember } from "@/app/actions/teamActions";
 
@@ -47,7 +48,7 @@ export function TeamPreview({ members }: { members: TeamMember[] }) {
               <div className="h-px w-8" style={{ backgroundColor: "#4F9EFF" }} />
               <span
                 className="text-xs font-medium tracking-[0.2em] uppercase"
-                style={{ color: "#4F9EFF", fontFamily: "'Inter', sans-serif" }}
+                style={{ color: "#4F9EFF", fontFamily: "var(--font-inter), sans-serif" }}
               >
                 Core Team
               </span>
@@ -60,7 +61,7 @@ export function TeamPreview({ members }: { members: TeamMember[] }) {
               transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
               className="leading-[1.05]"
               style={{
-                fontFamily: "'Syne', system-ui, sans-serif",
+                fontFamily: "var(--font-syne), system-ui, sans-serif",
                 fontWeight: 800,
                 fontSize: "clamp(2.2rem, 5vw, 3.5rem)",
                 color: "#ededed",
@@ -82,7 +83,7 @@ export function TeamPreview({ members }: { members: TeamMember[] }) {
               className="inline-flex items-center gap-2 text-sm font-medium transition-all duration-200"
               style={{
                 color: "rgba(255,255,255,0.5)",
-                fontFamily: "'Inter', sans-serif",
+                fontFamily: "var(--font-inter), sans-serif",
               }}
               onMouseEnter={(e) => {
                 (e.currentTarget as HTMLElement).style.color = "#4F9EFF";
@@ -119,7 +120,7 @@ export function TeamPreview({ members }: { members: TeamMember[] }) {
           >
             <p
               style={{
-                fontFamily: "'Inter', sans-serif",
+                fontFamily: "var(--font-inter), sans-serif",
                 color: "rgba(255,255,255,0.35)",
                 fontSize: "0.9rem",
               }}
@@ -178,11 +179,14 @@ function MemberCard({
         style={{ background: "#111111" }}
       >
         {member.photo ? (
-          <img
+          <Image
             src={member.photo}
             alt={member.name}
             className="w-full h-full object-cover transition-all duration-500 group-hover:scale-105"
             style={{ filter: "grayscale(20%)" }}
+            width={320}
+            height={320}
+            sizes="(max-width: 768px) 50vw, (max-width: 1200px) 25vw, 16vw"
           />
         ) : (
           <div
@@ -216,7 +220,7 @@ function MemberCard({
         <p
           className="mt-0.5 truncate"
           style={{
-            fontFamily: "'Inter', sans-serif",
+            fontFamily: "var(--font-inter), sans-serif",
             fontSize: "0.75rem",
             color: "rgba(255,255,255,0.38)",
           }}
@@ -285,10 +289,13 @@ function MemberModal({
               style={{ background: "#111111" }}
             >
               {member.photo ? (
-                <img
+                <Image
                   src={member.photo}
                   alt={member.name}
                   className="w-full h-full object-cover"
+                  width={112}
+                  height={112}
+                  sizes="112px"
                 />
               ) : (
                 <div
@@ -356,7 +363,7 @@ function MemberModal({
                 background: "rgba(0,242,255,0.07)",
                 border: "1px solid rgba(0,242,255,0.14)",
                 color: "#4F9EFF",
-                fontFamily: "'Inter', sans-serif",
+                fontFamily: "var(--font-inter), sans-serif",
               }}
             >
               Core Member
@@ -377,7 +384,7 @@ function MemberModal({
             <p
               className="mb-5"
               style={{
-                fontFamily: "'Inter', sans-serif",
+                fontFamily: "var(--font-inter), sans-serif",
                 fontSize: "0.875rem",
                 color: "rgba(255,255,255,0.4)",
               }}
@@ -387,7 +394,7 @@ function MemberModal({
 
             <p
               style={{
-                fontFamily: "'Inter', sans-serif",
+                fontFamily: "var(--font-inter), sans-serif",
                 fontSize: "0.9375rem",
                 color: "rgba(255,255,255,0.5)",
                 lineHeight: 1.65,
